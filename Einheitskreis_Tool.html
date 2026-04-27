@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Einheitskreis & Sinusfunktion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;600;700&display=swap');
+:root{
+  --bg:#0e0f14;--panel:#161820;--panel2:#1d2030;--border:#272a3e;
+  --accent:#6c8fff;--green:#3dd6a3;--orange:#ff8c5a;--yellow:#f5c842;
+  --red:#ff5f7e;--text:#d8dfee;--dim:#606880;--bright:#fff;
+  --sin:#6c8fff;--cos:#ff8c5a;--tan:#3dd6a3;--p-col:#aab4ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* HEADER */
+header{background:var(--panel);border-bottom:1px solid var(--border);
+  padding:9px 22px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.badge{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  background:rgba(108,143,255,.1);border:1px solid rgba(108,143,255,.25);
+  padding:2px 9px;border-radius:3px;}
+.hdr-title{font-size:15px;font-weight:700;color:var(--bright);}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+
+/* TOOLBAR */
+.toolbar{background:var(--panel2);border-bottom:1px solid var(--border);
+  padding:8px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;}
+
+.tab-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 14px;
+  border-radius:4px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);cursor:pointer;transition:all .15s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{background:rgba(108,143,255,.15);border-color:rgba(108,143,255,.4);color:var(--accent);}
+
+.sep{width:1px;height:22px;background:var(--border);margin:0 4px;}
+
+.tog-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 13px;
+  border-radius:4px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);cursor:pointer;transition:all .15s;}
+.tog-btn:hover{color:var(--text);}
+.tog-btn.on-sin{border-color:rgba(108,143,255,.5);color:var(--sin);background:rgba(108,143,255,.1);}
+.tog-btn.on-cos{border-color:rgba(255,140,90,.5);color:var(--cos);background:rgba(255,140,90,.1);}
+.tog-btn.on-tan{border-color:rgba(61,214,163,.5);color:var(--tan);background:rgba(61,214,163,.1);}
+
+.anim-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 14px;
+  border-radius:4px;border:1px solid rgba(61,214,163,.4);
+  background:rgba(61,214,163,.1);color:var(--green);cursor:pointer;transition:all .15s;}
+.anim-btn:hover{background:rgba(61,214,163,.18);}
+.anim-btn.playing{border-color:rgba(255,95,126,.4);background:rgba(255,95,126,.1);color:var(--red);}
+
+.slider-wrap{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.sl-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);white-space:nowrap;}
+.sl-val{font-family:'DM Mono',monospace;font-size:13px;color:var(--bright);min-width:48px;text-align:right;}
+input[type=range]{-webkit-appearance:none;width:120px;height:4px;
+  background:var(--border);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+  background:var(--accent);border-radius:50%;cursor:pointer;
+  box-shadow:0 0 0 3px rgba(108,143,255,.15);}
+
+/* MAIN */
+.main{flex:1;display:flex;min-height:0;overflow:hidden;}
+.canvas-panel{flex:1;position:relative;display:flex;align-items:stretch;}
+canvas{display:block;}
+#circle-canvas{flex:1;cursor:crosshair;}
+#graph-canvas{flex:1;border-left:1px solid var(--border);}
+#graph-canvas.hidden{display:none;}
+
+/* VALUES STRIP */
+.val-strip{flex-shrink:0;background:var(--panel);border-top:1px solid var(--border);
+  padding:8px 24px;display:flex;gap:0;align-items:stretch;}
+.val-card{flex:1;display:flex;align-items:center;gap:12px;padding:4px 20px;
+  border-right:1px solid var(--border);}
+.val-card:last-child{border-right:none;}
+.val-name{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;min-width:52px;}
+.val-num{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;}
+.val-bar-wrap{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;max-width:120px;}
+.val-bar{height:100%;border-radius:2px;transition:width .1s;}
+.val-sign{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);min-width:28px;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">DS 5 · Einheitskreis</span>
+  <span class="hdr-title">Einheitskreis &amp; Trigonometrische Funktionen</span>
+  <div class="hdr-right">
+    <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)">BK1 Kaufmännisch</span>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button class="tab-btn active" id="tab1" onclick="setMode(1)">◉ Einheitskreis</button>
+  <button class="tab-btn" id="tab2" onclick="setMode(2)">⌇ Funktion</button>
+  <div class="sep"></div>
+  <button class="tog-btn on-sin" id="btn-sin" onclick="toggle('sin')">sin(α)</button>
+  <button class="tog-btn on-cos" id="btn-cos" onclick="toggle('cos')">cos(α)</button>
+  <button class="tog-btn on-tan" id="btn-tan" onclick="toggle('tan')">tan(α)</button>
+  <div class="sep"></div>
+  <button class="anim-btn" id="anim-btn" onclick="toggleAnim()">▶ Animation</button>
+  <div class="slider-wrap">
+    <span class="sl-label">α =</span>
+    <input type="range" id="alpha-sl" min="0" max="360" value="47" step="1" oninput="setAlpha(+this.value)">
+    <span class="sl-val" id="sl-disp">47°</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="canvas-panel" id="canvas-panel">
+    <canvas id="circle-canvas"></canvas>
+    <canvas id="graph-canvas" class="hidden"></canvas>
+  </div>
+</div>
+
+<div class="val-strip">
+  <div class="val-card">
+    <span class="val-name" style="color:var(--sin)">sin α</span>
+    <span class="val-num" id="vsin" style="color:var(--sin)">0.000</span>
+    <div class="val-bar-wrap"><div class="val-bar" id="bsin" style="background:var(--sin)"></div></div>
+    <span class="val-sign" id="ssin"></span>
+  </div>
+  <div class="val-card">
+    <span class="val-name" style="color:var(--cos)">cos α</span>
+    <span class="val-num" id="vcos" style="color:var(--cos)">0.000</span>
+    <div class="val-bar-wrap"><div class="val-bar" id="bcos" style="background:var(--cos)"></div></div>
+    <span class="val-sign" id="scos"></span>
+  </div>
+  <div class="val-card">
+    <span class="val-name" style="color:var(--tan)">tan α</span>
+    <span class="val-num" id="vtan" style="color:var(--tan)">0.000</span>
+    <div class="val-bar-wrap"><div class="val-bar" id="btan" style="background:var(--tan)"></div></div>
+    <span class="val-sign" id="stan"></span>
+  </div>
+  <div class="val-card" style="flex:0.7;justify-content:center;">
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:3px;">sin²α + cos²α</div>
+      <div style="font-family:'DM Mono',monospace;font-size:16px;color:var(--green)" id="v-pyth">= 1.000</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CC = document.getElementById('circle-canvas');
+const GC = document.getElementById('graph-canvas');
+const ctx = CC.getContext('2d');
+const gctx = GC.getContext('2d');
+
+// State
+let alpha = 47;          // degrees
+let mode = 1;            // 1=Einheitskreis, 2=Funktion
+let show = {sin:true, cos:true, tan:true};
+let animating = false;
+let animId = null;
+let animSpeed = 0.8;     // degrees per frame
+let dragging = false;
+let tracePoints = [];    // for mode 2: traced path
+const MAX_TRACE = 400;
+
+// Colors
+const C = { sin:'#6c8fff', cos:'#ff8c5a', tan:'#3dd6a3',
+            circle:'#aaaaaa', axis:'#404455', p:'#aab4ff',
+            bg:'#0e0f14', panel:'#161820', dim:'#404455' };
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('tab1').classList.toggle('active', m===1);
+  document.getElementById('tab2').classList.toggle('active', m===2);
+  GC.classList.toggle('hidden', m===1);
+  if (m===2) tracePoints = [];
+  resize(); draw();
+}
+
+function toggle(key) {
+  show[key] = !show[key];
+  const btn = document.getElementById('btn-'+key);
+  btn.classList.toggle('on-'+key, show[key]);
+  draw();
+}
+
+function setAlpha(a) {
+  alpha = ((a % 360) + 360) % 360;
+  document.getElementById('alpha-sl').value = Math.round(alpha);
+  document.getElementById('sl-disp').textContent = Math.round(alpha) + '°';
+  draw();
+}
+
+function toggleAnim() {
+  animating = !animating;
+  const btn = document.getElementById('anim-btn');
+  btn.textContent = animating ? '■ Stop' : '▶ Animation';
+  btn.classList.toggle('playing', animating);
+  if (animating) { tracePoints = []; animLoop(); }
+  else if (animId) { cancelAnimationFrame(animId); animId = null; }
+}
+
+function animLoop() {
+  alpha = (alpha + animSpeed) % 360;
+  document.getElementById('alpha-sl').value = Math.round(alpha);
+  document.getElementById('sl-disp').textContent = Math.round(alpha) + '°';
+  draw();
+  if (animating) animId = requestAnimationFrame(animLoop);
+}
+
+// ─── RESIZE ──────────────────────────────────────────────────
+function resize() {
+  const panel = document.getElementById('canvas-panel');
+  const W = panel.clientWidth, H = panel.clientHeight;
+  if (mode === 1) {
+    CC.width = W; CC.height = H;
+  } else {
+    CC.width = Math.floor(W/2); CC.height = H;
+    GC.width = W - CC.width;    GC.height = H;
+  }
+}
+
+// ─── GEOMETRY ────────────────────────────────────────────────
+function getCircleParams() {
+  const W = CC.width, H = CC.height;
+  const R = Math.min(W, H) * (mode===1 ? 0.30 : 0.34);
+  const cx = mode===1 ? W*0.42 : W*0.50;
+  const cy = H * 0.50;
+  return {R, cx, cy};
+}
+
+function getGraphParams() {
+  const W = GC.width, H = GC.height;
+  const pad = {l:56, r:20, t:30, b:40};
+  return {
+    W, H, pad,
+    gw: W - pad.l - pad.r,
+    gh: H - pad.t  - pad.b,
+    ox: pad.l, oy: pad.t + (H - pad.t - pad.b)/2
+  };
+}
+
+// ─── DRAW CIRCLE ─────────────────────────────────────────────
+function drawCircle() {
+  const W = CC.width, H = CC.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // bg
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  const {R, cx, cy} = getCircleParams();
+  const rad = alpha * Math.PI / 180;
+  const Px = cx + R * Math.cos(rad);
+  const Py = cy - R * Math.sin(rad);
+  const sinA = Math.sin(rad), cosA = Math.cos(rad), tanA = Math.tan(rad);
+
+  // Grid dots
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  for(let gx=0;gx<W;gx+=30) for(let gy=0;gy<H;gy+=30) {
+    ctx.beginPath(); ctx.arc(gx,gy,1,0,Math.PI*2); ctx.fill();
+  }
+
+  // Axes
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(cx-R*1.55,cy); ctx.lineTo(cx+R*1.55,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-R*1.4); ctx.lineTo(cx,cy+R*1.4); ctx.stroke();
+
+  // Axis arrow tips
+  function arrow(x,y,dir) {
+    ctx.fillStyle = C.axis;
+    ctx.beginPath();
+    if(dir==='r'){ ctx.moveTo(x,y); ctx.lineTo(x-7,y-4); ctx.lineTo(x-7,y+4); }
+    else if(dir==='u'){ ctx.moveTo(x,y); ctx.lineTo(x-4,y+7); ctx.lineTo(x+4,y+7); }
+    ctx.fill();
+  }
+  arrow(cx+R*1.55,cy,'r'); arrow(cx,cy-R*1.4,'u');
+
+  // Axis labels
+  ctx.fillStyle = '#606880'; ctx.font = '11px DM Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('0', cx+R*1.45, cy+14);
+  ctx.fillText('π/2', cx+8, cy-R*1.28);
+
+  // Unit circle
+  ctx.strokeStyle = '#555870'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.stroke();
+
+  // Cardinal labels
+  function cardLabel(lx, ly, txt, ox, oy) {
+    ctx.fillStyle = '#44475a'; ctx.font = 'bold 11px DM Mono,monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(txt, lx+ox, ly+oy);
+  }
+  cardLabel(cx+R, cy, '0°', 18, 0);
+  cardLabel(cx, cy-R, '90°', 0, -14);
+  cardLabel(cx-R, cy, '180°', -24, 0);
+  cardLabel(cx, cy+R, '270°', 0, 14);
+
+  // sin segment: P → foot on x-axis
+  if (show.sin) {
+    const footX = Px, footY = cy;
+    ctx.strokeStyle = C.sin; ctx.lineWidth = 4; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(footX, footY); ctx.lineTo(Px, Py); ctx.stroke();
+    // dashed projection line
+    ctx.strokeStyle = C.sin+'44'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(footX, footY); ctx.stroke();
+    ctx.setLineDash([]);
+    // label
+    const mx = footX + (sinA >= 0 ? 20 : -42);
+    ctx.fillStyle = C.sin; ctx.font = 'bold 12px DM Mono,monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const sLabel = 'sin α';
+    ctx.fillText(sLabel, footX + (cosA >= 0 ? 6 : -(ctx.measureText(sLabel).width+6)), (Py+footY)/2);
+  }
+
+  // cos segment: center → foot on x-axis
+  if (show.cos) {
+    const footX = Px, footY = cy;
+    ctx.strokeStyle = C.cos; ctx.lineWidth = 4; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(footX, cy); ctx.stroke();
+    // label below
+    ctx.fillStyle = C.cos; ctx.font = 'bold 12px DM Mono,monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('cos α', (cx+footX)/2, cy + (sinA>=0? 6 : -22));
+  }
+
+  // tan segment: tangent line at 0°
+  if (show.tan && Math.abs(cosA) > 0.06) {
+    const tx = cx + R;       // x-position of tangent line (at 0°)
+    const tanLen = R * tanA;
+    const tanTopY = cy - tanLen;  // where line from center through P hits tangent
+    // vertical tangent line (dashed reference)
+    ctx.strokeStyle = C.tan+'44'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(tx, cy - R*1.3); ctx.lineTo(tx, cy + R*1.3); ctx.stroke();
+    ctx.setLineDash([]);
+    // tan segment from x-axis to intersection
+    ctx.strokeStyle = C.tan; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(tx, cy); ctx.lineTo(tx, tanTopY); ctx.stroke();
+    // line from center through P to tangent line
+    ctx.strokeStyle = C.tan+'55'; ctx.lineWidth = 1; ctx.setLineDash([3,4]);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(tx, tanTopY); ctx.stroke();
+    ctx.setLineDash([]);
+    // label
+    ctx.fillStyle = C.tan; ctx.font = 'bold 12px DM Mono,monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('tan α', tx + 6, (cy + tanTopY)/2);
+  }
+
+  // Radius line A→P
+  ctx.strokeStyle = 'rgba(180,185,210,0.6)'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(Px, Py); ctx.stroke();
+
+  // Angle arc
+  ctx.strokeStyle = '#3dd6a3'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, R*0.22, 0, -rad, true); ctx.stroke();
+  // α label on arc
+  const arcMid = -rad/2;
+  const arcLR = R * 0.35;
+  ctx.fillStyle = '#3dd6a3'; ctx.font = 'bold 13px DM Mono,monospace';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('α', cx + arcLR*Math.cos(arcMid), cy + arcLR*Math.sin(arcMid));
+
+  // Point P
+  ctx.fillStyle = C.p;
+  ctx.beginPath(); ctx.arc(Px, Py, 7, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(Px, Py, 7, 0, Math.PI*2); ctx.stroke();
+  // P label
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 13px DM Mono,monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+  ctx.fillText('P', Px + 10, Py - 4);
+
+  // Center dot
+  ctx.fillStyle = '#ffffff44';
+  ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI*2); ctx.fill();
+
+  // Mode 1: info box in corner
+  if (mode === 1) {
+    const bx = W - 180, by = 20, bw = 160, bh = 70;
+    ctx.fillStyle = 'rgba(22,24,32,0.88)';
+    roundRect(ctx, bx, by, bw, bh, 6); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 1;
+    roundRect(ctx, bx, by, bw, bh, 6); ctx.stroke();
+
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = '11px DM Mono,monospace';
+    const vals = [
+      ['sin α', sinA.toFixed(3), C.sin],
+      ['cos α', cosA.toFixed(3), C.cos],
+      ['tan α', Math.abs(cosA)>0.04 ? tanA.toFixed(3) : '—', C.tan],
+    ];
+    vals.forEach(([name,val,col],i) => {
+      ctx.fillStyle = col;
+      ctx.fillText(name + ' = ' + val, bx+12, by+12+i*18);
+    });
+  }
+
+  // Coordinates of P
+  ctx.fillStyle = '#606880'; ctx.font = '10px DM Mono,monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('P = (cos α | sin α) = (' + cosA.toFixed(2) + ' | ' + sinA.toFixed(2) + ')', 14, 12);
+}
+
+function roundRect(c, x, y, w, h, r) {
+  c.beginPath();
+  c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.arcTo(x+w,y,x+w,y+r,r);
+  c.lineTo(x+w,y+h-r); c.arcTo(x+w,y+h,x+w-r,y+h,r);
+  c.lineTo(x+r,y+h); c.arcTo(x,y+h,x,y+h-r,r);
+  c.lineTo(x,y+r); c.arcTo(x,y,x+r,y,r);
+  c.closePath();
+}
+
+// ─── DRAW GRAPH ──────────────────────────────────────────────
+function drawGraph() {
+  const W = GC.width, H = GC.height;
+  gctx.clearRect(0,0,W,H);
+  gctx.fillStyle = C.bg;
+  gctx.fillRect(0,0,W,H);
+
+  const {pad,gw,gh,ox,oy} = getGraphParams();
+  const rad = alpha * Math.PI / 180;
+  const sinA = Math.sin(rad), cosA = Math.cos(rad);
+
+  // Map angle (degrees) → canvas x
+  function ax(deg) { return ox + (deg/360)*gw; }
+  // Map value (-1..1) → canvas y
+  function ay(v)   { return oy - v*(gh*0.44); }
+
+  // Background grid
+  gctx.strokeStyle = '#1e2035'; gctx.lineWidth = 1;
+  // horizontal grid at -1, -0.5, 0, 0.5, 1
+  [-1,-0.5,0.5,1].forEach(v => {
+    gctx.beginPath(); gctx.moveTo(ox, ay(v)); gctx.lineTo(ox+gw, ay(v)); gctx.stroke();
+  });
+  // vertical grid at 90,180,270,360
+  [90,180,270,360].forEach(d => {
+    gctx.beginPath(); gctx.moveTo(ax(d), pad.t); gctx.lineTo(ax(d), pad.t+gh); gctx.stroke();
+  });
+
+  // Axes
+  gctx.strokeStyle = '#404455'; gctx.lineWidth = 1.5;
+  gctx.beginPath(); gctx.moveTo(ox, pad.t); gctx.lineTo(ox, pad.t+gh); gctx.stroke();
+  gctx.beginPath(); gctx.moveTo(ox, oy); gctx.lineTo(ox+gw, oy); gctx.stroke();
+
+  // Axis labels
+  gctx.fillStyle = '#606880'; gctx.font = '10px DM Mono,monospace';
+  gctx.textAlign = 'center'; gctx.textBaseline = 'top';
+  ['90°','180°','270°','360°'].forEach((lbl,i) => {
+    gctx.fillText(lbl, ax((i+1)*90), oy+5);
+  });
+  gctx.textAlign = 'right'; gctx.textBaseline = 'middle';
+  [['1',1],['-1',-1],['0.5',0.5],['-0.5',-0.5]].forEach(([lbl,v]) => {
+    gctx.fillText(lbl, ox-5, ay(v));
+  });
+
+  // y-axis label
+  gctx.fillStyle = '#404455'; gctx.font = '10px DM Mono,monospace';
+  gctx.textAlign = 'center'; gctx.textBaseline = 'bottom';
+  gctx.save(); gctx.translate(14, pad.t+gh/2); gctx.rotate(-Math.PI/2);
+  gctx.fillText('sin α , cos α', 0, 0); gctx.restore();
+
+  // Trace history (mode 2 with animation)
+  if (tracePoints.length > 1 && animating) {
+    if (show.sin) {
+      gctx.strokeStyle = C.sin+'66'; gctx.lineWidth = 2; gctx.setLineDash([]);
+      gctx.beginPath();
+      tracePoints.forEach((p,i) => {
+        if(i===0) gctx.moveTo(ax(p.a), ay(p.s));
+        else gctx.lineTo(ax(p.a), ay(p.s));
+      });
+      gctx.stroke();
+    }
+    if (show.cos) {
+      gctx.strokeStyle = C.cos+'66'; gctx.lineWidth = 2;
+      gctx.beginPath();
+      tracePoints.forEach((p,i) => {
+        if(i===0) gctx.moveTo(ax(p.a), ay(p.c));
+        else gctx.lineTo(ax(p.a), ay(p.c));
+      });
+      gctx.stroke();
+    }
+  }
+
+  // Full curves (faint)
+  function plotCurve(fn, color) {
+    gctx.strokeStyle = color+'40'; gctx.lineWidth = 1.5; gctx.setLineDash([]);
+    gctx.beginPath();
+    for(let d=0; d<=360; d+=1) {
+      const x = ax(d), y = ay(fn(d*Math.PI/180));
+      d===0 ? gctx.moveTo(x,y) : gctx.lineTo(x,y);
+    }
+    gctx.stroke();
+  }
+  if(show.sin) plotCurve(Math.sin, C.sin);
+  if(show.cos) plotCurve(Math.cos, C.cos);
+
+  // Vertical dashed line at current alpha
+  gctx.strokeStyle = '#3dd6a3'+55; gctx.lineWidth = 1; gctx.setLineDash([4,4]);
+  const curX = ax(alpha % 360);
+  gctx.beginPath(); gctx.moveTo(curX, pad.t); gctx.lineTo(curX, pad.t+gh); gctx.stroke();
+  gctx.setLineDash([]);
+
+  // Horizontal dashed lines from sin/cos values to curve
+  const curA = alpha % 360;
+  if(show.sin) {
+    gctx.strokeStyle = C.sin+'55'; gctx.lineWidth = 1; gctx.setLineDash([3,4]);
+    gctx.beginPath(); gctx.moveTo(ox, ay(sinA)); gctx.lineTo(curX, ay(sinA)); gctx.stroke();
+    gctx.setLineDash([]);
+    // sin point on curve
+    gctx.fillStyle = C.sin;
+    gctx.beginPath(); gctx.arc(curX, ay(sinA), 5.5, 0, Math.PI*2); gctx.fill();
+    gctx.strokeStyle = '#fff'; gctx.lineWidth=1;
+    gctx.beginPath(); gctx.arc(curX, ay(sinA), 5.5, 0, Math.PI*2); gctx.stroke();
+  }
+  if(show.cos) {
+    gctx.strokeStyle = C.cos+'55'; gctx.lineWidth = 1; gctx.setLineDash([3,4]);
+    gctx.beginPath(); gctx.moveTo(ox, ay(cosA)); gctx.lineTo(curX, ay(cosA)); gctx.stroke();
+    gctx.setLineDash([]);
+    gctx.fillStyle = C.cos;
+    gctx.beginPath(); gctx.arc(curX, ay(cosA), 5.5, 0, Math.PI*2); gctx.fill();
+    gctx.strokeStyle = '#fff'; gctx.lineWidth=1;
+    gctx.beginPath(); gctx.arc(curX, ay(cosA), 5.5, 0, Math.PI*2); gctx.stroke();
+  }
+
+  // Labels for curves on right side
+  const labelX = ox+gw+4;
+  if(show.sin) {
+    gctx.fillStyle = C.sin; gctx.font = 'bold 11px DM Mono,monospace';
+    gctx.textAlign='left'; gctx.textBaseline='middle';
+    gctx.fillText('sin', labelX, ay(0.85));
+  }
+  if(show.cos) {
+    gctx.fillStyle = C.cos; gctx.font = 'bold 11px DM Mono,monospace';
+    gctx.textAlign='left'; gctx.textBaseline='middle';
+    gctx.fillText('cos', labelX, ay(-0.85));
+  }
+
+  // α annotation at top
+  gctx.fillStyle = '#3dd6a3'; gctx.font = 'bold 11px DM Mono,monospace';
+  gctx.textAlign = 'center'; gctx.textBaseline = 'bottom';
+  gctx.fillText('α = ' + Math.round(alpha) + '°', curX, pad.t - 2);
+}
+
+// ─── VALUES STRIP ─────────────────────────────────────────────
+function updateValues() {
+  const rad = alpha * Math.PI / 180;
+  const sinA = Math.sin(rad), cosA = Math.cos(rad), tanA = Math.tan(rad);
+
+  function setVal(id, bid, sid, v, max) {
+    document.getElementById(id).textContent = Math.abs(v) < 999 ? v.toFixed(3) : '—';
+    const pct = Math.min(Math.abs(v)/max, 1)*100;
+    document.getElementById(bid).style.width = pct+'%';
+    document.getElementById(sid).textContent = v > 0.001 ? '▲ pos' : v < -0.001 ? '▼ neg' : '= 0';
+    document.getElementById(sid).style.color = v > 0.001 ? '#3dd6a3' : v < -0.001 ? '#ff5f7e' : '#606880';
+  }
+  setVal('vsin','bsin','ssin', sinA, 1);
+  setVal('vcos','bcos','scos', cosA, 1);
+  if(Math.abs(cosA) > 0.04) setVal('vtan','btan','stan', tanA, 3);
+  else {
+    document.getElementById('vtan').textContent='±∞';
+    document.getElementById('btan').style.width='100%';
+    document.getElementById('stan').textContent='';
+  }
+  document.getElementById('v-pyth').textContent = '= '+(sinA*sinA+cosA*cosA).toFixed(3);
+
+  // Add trace point
+  if(mode===2 && animating) {
+    const curA = alpha % 360;
+    tracePoints.push({a:curA, s:sinA, c:cosA});
+    if(tracePoints.length > MAX_TRACE) tracePoints.shift();
+  }
+}
+
+// ─── DRAW (main) ─────────────────────────────────────────────
+function draw() {
+  updateValues();
+  drawCircle();
+  if(mode===2) drawGraph();
+}
+
+// ─── DRAG ────────────────────────────────────────────────────
+function getAngleFromMouse(e) {
+  const rect = CC.getBoundingClientRect();
+  const mx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const my = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  const {cx, cy} = getCircleParams();
+  const dx = mx - cx, dy = cy - my;
+  let a = Math.atan2(dy, dx) * 180 / Math.PI;
+  if(a < 0) a += 360;
+  return a;
+}
+
+CC.addEventListener('mousedown', e => {
+  if(animating) return;
+  dragging = true;
+  setAlpha(getAngleFromMouse(e)); draw();
+});
+CC.addEventListener('mousemove', e => {
+  if(!dragging) return;
+  setAlpha(getAngleFromMouse(e)); draw();
+});
+document.addEventListener('mouseup', () => dragging = false);
+CC.addEventListener('touchstart', e => {
+  if(animating) return;
+  e.preventDefault(); dragging = true;
+  setAlpha(getAngleFromMouse(e)); draw();
+}, {passive:false});
+CC.addEventListener('touchmove', e => {
+  if(!dragging) return; e.preventDefault();
+  setAlpha(getAngleFromMouse(e)); draw();
+}, {passive:false});
+document.addEventListener('touchend', () => dragging = false);
+
+// ─── RESIZE observer ─────────────────────────────────────────
+// Suppress the benign ResizeObserver loop notification
+window.addEventListener('error', e => {
+  if (e.message && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation(); e.preventDefault();
+  }
+});
+
+const ro = new ResizeObserver(() => { requestAnimationFrame(() => { resize(); draw(); }); });
+ro.observe(document.getElementById('canvas-panel'));
+
+// ─── INIT ────────────────────────────────────────────────────
+resize(); draw();
+</script>
+</body>
+</html>
