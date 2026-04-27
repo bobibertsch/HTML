@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unterrichtsplan · Trigonometrische Funktionen · BK1 Kaufmännisch</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --accent: #4a7cff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b4a;
+    --text: #e2e8f0;
+    --text-dim: #8892a4;
+    --text-bright: #ffffff;
+    --ds1: #4a7cff;
+    --ds2: #7b5ea7;
+    --ds3: #00b894;
+    --ds4: #e17055;
+    --ds5: #fdcb6e;
+    --ds6: #74b9ff;
+    --ds7: #e84393;
+    --tag-bg: rgba(74,124,255,0.12);
+    --tag-border: rgba(74,124,255,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: rgba(74,124,255,0.1);
+    border: 1px solid rgba(74,124,255,0.25);
+    padding: 3px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.01em;
+  }
+
+  .header-meta {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ─── MAIN ─────────────────────────────────────────────────── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .hero {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--tag-border);
+    background: var(--tag-bg);
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .tag.green  { color: var(--accent2); background: rgba(0,212,170,0.08); border-color: rgba(0,212,170,0.25); }
+  .tag.orange { color: var(--accent3); background: rgba(255,107,74,0.08); border-color: rgba(255,107,74,0.25); }
+  .tag.yellow { color: var(--ds5);     background: rgba(253,203,110,0.08); border-color: rgba(253,203,110,0.25); }
+  .tag.pink   { color: var(--ds7);     background: rgba(232,67,147,0.08); border-color: rgba(232,67,147,0.25); }
+
+  /* ─── SECTION LABELS ─────────────────────────────────────── */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 20px;
+  }
+
+  /* ─── GROBPLANUNG GRID ───────────────────────────────────── */
+  .grob-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 800px) { .grob-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .grob-grid { grid-template-columns: 1fr; } }
+
+  .grob-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .grob-card:hover { transform: translateY(-2px); }
+
+  .grob-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .grob-card[data-ds="1"]::before { background: var(--ds1); }
+  .grob-card[data-ds="2"]::before { background: var(--ds2); }
+  .grob-card[data-ds="3"]::before { background: var(--ds3); }
+  .grob-card[data-ds="4"]::before { background: var(--ds4); }
+  .grob-card[data-ds="5"]::before { background: var(--ds5); }
+  .grob-card[data-ds="6"]::before { background: var(--ds6); }
+  .grob-card[data-ds="7"]::before { background: var(--ds7); }
+
+  .grob-card[data-ds="1"]:hover { border-color: var(--ds1); }
+  .grob-card[data-ds="2"]:hover { border-color: var(--ds2); }
+  .grob-card[data-ds="3"]:hover { border-color: var(--ds3); }
+  .grob-card[data-ds="4"]:hover { border-color: var(--ds4); }
+  .grob-card[data-ds="5"]:hover { border-color: var(--ds5); }
+  .grob-card[data-ds="6"]:hover { border-color: var(--ds6); }
+  .grob-card[data-ds="7"]:hover { border-color: var(--ds7); }
+
+  .grob-phase-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .grob-num  { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+  .grob-thema { font-size: 13px; font-weight: 600; color: var(--text-bright); margin-bottom: 8px; line-height: 1.4; }
+
+  .grob-items { list-style: none; display: flex; flex-wrap: wrap; gap: 5px; }
+  .grob-item  { font-size: 10px; font-family: 'IBM Plex Mono', monospace; padding: 2px 7px; border-radius: 2px; background: rgba(255,255,255,0.05); color: var(--text-dim); }
+
+  .grob-arrow {
+    position: absolute; bottom: 12px; right: 12px;
+    font-size: 14px; color: var(--text-dim); opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .grob-card:hover .grob-arrow { opacity: 1; transform: translateX(3px); }
+
+  /* Phase separator for Grobplanung */
+  .grob-phase-sep {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 2px;
+  }
+  .grob-phase-sep-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .grob-phase-sep-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─── FEINPLANUNG ACCORDION ──────────────────────────────── */
+  .fein-section { margin-bottom: 40px; }
+
+  .fein-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .ds-tab-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .ds-tab-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+  .toggle-all-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.15s;
+  }
+  .toggle-all-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .ds-accordion {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: var(--surface);
+  }
+
+  .ds-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .ds-header:hover { background: rgba(255,255,255,0.03); }
+
+  .ds-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+
+  .ds-accordion[data-ds="1"] .ds-header::before { background: var(--ds1); }
+  .ds-accordion[data-ds="2"] .ds-header::before { background: var(--ds2); }
+  .ds-accordion[data-ds="3"] .ds-header::before { background: var(--ds3); }
+  .ds-accordion[data-ds="4"] .ds-header::before { background: var(--ds4); }
+  .ds-accordion[data-ds="5"] .ds-header::before { background: var(--ds5); }
+  .ds-accordion[data-ds="6"] .ds-header::before { background: var(--ds6); }
+  .ds-accordion[data-ds="7"] .ds-header::before { background: var(--ds7); }
+
+  .ds-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 34px;
+  }
+  .ds-accordion[data-ds="1"] .ds-num { color: var(--ds1); }
+  .ds-accordion[data-ds="2"] .ds-num { color: var(--ds2); }
+  .ds-accordion[data-ds="3"] .ds-num { color: var(--ds3); }
+  .ds-accordion[data-ds="4"] .ds-num { color: var(--ds4); }
+  .ds-accordion[data-ds="5"] .ds-num { color: var(--ds5); }
+  .ds-accordion[data-ds="6"] .ds-num { color: var(--ds6); }
+  .ds-accordion[data-ds="7"] .ds-num { color: var(--ds7); }
+
+  .ds-title-group { flex: 1; }
+  .ds-title { font-size: 15px; font-weight: 600; color: var(--text-bright); }
+  .ds-subtitle { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+  .ds-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .ds-time-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+  }
+  .ds-sz-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(0,212,170,0.08);
+    color: var(--accent2);
+    border: 1px solid rgba(0,212,170,0.2);
+  }
+
+  .ds-chevron { color: var(--text-dim); font-size: 14px; transition: transform 0.25s; }
+  .ds-accordion.open .ds-chevron { transform: rotate(90deg); }
+
+  .ds-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 24px 24px 24px 28px;
+  }
+  .ds-accordion.open .ds-body { display: block; }
+
+  /* ─── BODY GRID ──────────────────────────────────────────── */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) { .body-grid { grid-template-columns: 1fr; } }
+
+  .body-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .body-card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .lz-list { list-style: none; }
+  .lz-list li {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .lz-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent2);
+    background: rgba(0,212,170,0.1);
+    padding: 1px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    height: fit-content;
+    margin-top: 2px;
+  }
+
+  .mat-list { list-style: none; }
+  .mat-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(42,48,69,0.5);
+    color: var(--text);
+  }
+  .mat-list li:last-child { border-bottom: none; }
+  .mat-icon { font-size: 14px; }
+
+  .mat-note {
+    font-size: 11px;
+    color: var(--accent3);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .mat-ok {
+    font-size: 11px;
+    color: var(--accent2);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-left: auto;
+  }
+
+  .tafelbild-box {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text);
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    padding: 12px;
+    white-space: pre-wrap;
+  }
+
+  /* ─── DIFFERENZIERUNG ────────────────────────────────────── */
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .diff-table th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .diff-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(42,48,69,0.4);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .diff-table tr:last-child td { border-bottom: none; }
+
+  .niveau-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ─── ZEITPLAN ───────────────────────────────────────────── */
+  .zeit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .zeit-table th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+  }
+  .zeit-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(42,48,69,0.5);
+    vertical-align: top;
+    color: var(--text);
+  }
+  .zeit-table tr:last-child td { border-bottom: none; }
+  .zeit-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .zeit-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .phase-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .phase-einstieg  { background: rgba(74,124,255,0.15); color: var(--ds1); }
+  .phase-erarbeitung { background: rgba(123,94,167,0.15); color: var(--ds2); }
+  .phase-uebung    { background: rgba(0,184,148,0.15); color: var(--ds3); }
+  .phase-sicherung { background: rgba(225,112,85,0.15); color: var(--ds4); }
+  .phase-ausblick  { background: rgba(253,203,110,0.12); color: var(--ds5); }
+
+  .sf-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* ─── HINWEIS-BOX ────────────────────────────────────────── */
+  .hinweis-box {
+    background: rgba(74,124,255,0.06);
+    border: 1px solid rgba(74,124,255,0.2);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+  .hinweis-box strong { color: var(--accent); }
+
+  /* ─── BEWERTUNG DER MATERIALIEN ──────────────────────────── */
+  .ab-eval-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 600px) { .ab-eval-grid { grid-template-columns: 1fr; } }
+
+  .ab-eval-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .ab-eval-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .ab-eval-status {
+    font-size: 14px;
+  }
+
+  .ab-eval-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-bright);
+    flex: 1;
+  }
+
+  .ab-eval-ds {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.05);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .ab-eval-body {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .ab-eval-body .ok  { color: var(--accent2); }
+  .ab-eval-body .warn { color: var(--ds5); }
+  .ab-eval-body .change { color: var(--accent3); }
+
+  /* ─── MATERIALIEN-VORSCHAU ───────────────────────────────── */
+  .further-mat-list { list-style: none; }
+  .further-mat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .further-mat-item:last-child { border-bottom: none; }
+
+  .fmi-icon {
+    font-size: 20px;
+    line-height: 1;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .fmi-content { flex: 1; }
+  .fmi-title { font-weight: 600; font-size: 13px; color: var(--text-bright); margin-bottom: 2px; }
+  .fmi-desc  { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+  .fmi-ds-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .fmi-ds-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+  }
+
+  .fmi-prio {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .prio-hoch     { background: rgba(0,212,170,0.1); color: var(--accent2); border: 1px solid rgba(0,212,170,0.2); }
+  .prio-mittel   { background: rgba(253,203,110,0.1); color: var(--ds5); border: 1px solid rgba(253,203,110,0.2); }
+  .prio-optional { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid rgba(255,255,255,0.1); }
+
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ──────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <span class="badge">BK1 · Mathe</span>
+    <span class="header-title">Unterrichtsplanung · Trigonometrische Funktionen</span>
+    <div class="header-meta">
+      <span>BK1 Kaufmännisch · Sek I</span>
+      <span>Schuljahr 2024/25</span>
+      <span>7 Doppelstunden</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ─── HERO ──────────────────────────────────────────────── -->
+  <div class="hero">
+    <h1>Trigonometrische <span>Funktionen</span></h1>
+    <p class="hero-sub">
+      Fach: Mathematik · Klasse: BK1 Kaufmännisch · Baden-Württemberg Sek I
+    </p>
+    <div class="tags">
+      <span class="tag">7 DS à 90 min</span>
+      <span class="tag green">Arbeitsblatt-basiert</span>
+      <span class="tag orange">Geom.-Wiederholung</span>
+      <span class="tag">GTR</span>
+      <span class="tag yellow">Einheitskreis</span>
+      <span class="tag pink">Funktionen</span>
+    </div>
+  </div>
+
+  <!-- ─── 01 MATERIALIEN-BEWERTUNG ──────────────────────────── -->
+  <div style="margin-bottom:40px">
+    <div class="section-label">00 — Bewertung der vorhandenen Materialien</div>
+    <h2 class="section-title">Bestandsaufnahme: Was ist brauchbar?</h2>
+
+    <div class="ab-eval-grid">
+
+      <div class="ab-eval-card">
+        <div class="ab-eval-header">
+          <span class="ab-eval-status">✅</span>
+          <span class="ab-eval-title">AB_Trigonometrie.docx</span>
+          <span class="ab-eval-ds">DS 1–2</span>
+        </div>
+        <div class="ab-eval-body">
+          <p><span class="ok">➕ Behält:</span> Theorie-Teil (ähnliche Dreiecke → sin/cos/tan), Aufg. 1 (Dachraum), Aufg. 2 (Satteldach), Aufg. 4 (Turmbeobachtung), Aufg. 5 (Pyramide), Aufg. 6 (Eisenbahn).</p>
+          <br>
+          <p><span class="warn">⚠ Streichen:</span> <strong>Aufgabe 3</strong> (Kräfte an schiefer Ebene) – zu physik-technisch für kaufmännischen BK1. Ersatz: Aufgabe mit Rampenneigung für Lieferfahrzeuge oder Geländegefälle bei Grundstücken.</p>
+          <br>
+          <p><span class="change">→ Empfehlung:</span> AB so verwenden wie es ist, Aufg. 3 weglassen oder durch eine leichtere kaufmännische Variante ersetzen. Kein neues AB nötig.</p>
+        </div>
+      </div>
+
+      <div class="ab-eval-card">
+        <div class="ab-eval-header">
+          <span class="ab-eval-status">✅</span>
+          <span class="ab-eval-title">01_AB_Einführung.docx</span>
+          <span class="ab-eval-ds">DS 3</span>
+        </div>
+        <div class="ab-eval-body">
+          <p><span class="ok">➕ Sehr gut:</span> Das Leiter-Problem ist ein klassisch erprobter Übergang von sin/cos als Verhältnis zu sin/cos als Funktion des Winkels. Unverändert verwenden.</p>
+          <br>
+          <p>Aufbau überzeugend: a) Gleichung aufstellen, b) Tabelle, c) Graph zeichnen – das deckt exakt den konzeptuellen Schritt ab, der hier gebraucht wird.</p>
+          <br>
+          <p><span class="ok">→ Keine Änderung nötig.</span></p>
+        </div>
+      </div>
+
+      <div class="ab-eval-card">
+        <div class="ab-eval-header">
+          <span class="ab-eval-status">✅</span>
+          <span class="ab-eval-title">02_AB_Bogenmaß.doc</span>
+          <span class="ab-eval-ds">DS 4</span>
+        </div>
+        <div class="ab-eval-body">
+          <p><span class="ok">➕ Brauchbar:</span> Der Kontext „Auto auf Kreisbahn" ist anschaulich und motivierend. Bogenlänge und Winkelmaß werden handlungsorientiert eingeführt.</p>
+          <br>
+          <p><span class="warn">⚠ Hinweis:</span> Legacy .doc-Format – einmalig in .docx konvertieren (LibreOffice). Inhalt ist didaktisch sauber.</p>
+          <br>
+          <p><span class="ok">→ Nach Konvertierung unverändert verwenden.</span></p>
+        </div>
+      </div>
+
+      <div class="ab-eval-card">
+        <div class="ab-eval-header">
+          <span class="ab-eval-status">✅</span>
+          <span class="ab-eval-title">03_AB_TrigoDef.docx</span>
+          <span class="ab-eval-ds">DS 5</span>
+        </div>
+        <div class="ab-eval-body">
+          <p><span class="ok">➕ Gut:</span> Einheitskreis-Definition sauber aufgebaut. Wertetabelle mit Grad- und Bogenmaß. Schaubild-Skizze für sin und cos. Standard-Vorgehen, funktioniert.</p>
+          <br>
+          <p><span class="warn">⚠ Hinweis:</span> Formeln liegen als .wmf-Grafiken vor – Anzeige je nach Word-Version problematisch. Ggf. in MathType oder LaTeX überführen, falls Darstellungsprobleme auftreten.</p>
+          <br>
+          <p><span class="ok">→ Unverändert verwenden.</span></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hinweis-box">
+      <strong>Fazit:</strong> Für die gesamte Einstiegsphase (DS 1–5) werden <strong>keine neuen Arbeitsblätter benötigt</strong>. Die vorhandenen Materialien decken den Lehrgang vollständig ab. Für DS 6 (Graphen &amp; Transformationen) und DS 7 (Anwendungen) sind neue ABs sinnvoll – diese werden nach Bedarf ausgearbeitet.
+    </div>
+  </div>
+
+  <!-- ─── 01 GROBPLANUNG ─────────────────────────────────────── -->
+  <div style="margin-bottom:40px">
+    <div class="section-label">01 — Grobplanung</div>
+    <h2 class="section-title">Einheit: Trigonometrische Funktionen</h2>
+
+    <div class="grob-grid">
+
+      <!-- Phase 1: Einstieg -->
+      <div class="grob-phase-sep" style="grid-column: 1 / -1">
+        <span class="grob-phase-sep-label" style="color:var(--ds1)">Phase 1 · Einstieg &amp; Trigonometrie im rechtwinkligen Dreieck</span>
+        <div class="grob-phase-sep-line"></div>
+      </div>
+
+      <div class="grob-card" data-ds="1" onclick="openDS(1)">
+        <div class="grob-num">DS 1 · 90 min</div>
+        <div class="grob-thema">Geometrie-Wiederholung &amp; Einstieg Trigonometrie</div>
+        <ul class="grob-items">
+          <li class="grob-item">Pythagoras</li>
+          <li class="grob-item">ähnl. Dreiecke</li>
+          <li class="grob-item">sin/cos/tan Def.</li>
+          <li class="grob-item">AB_Trigonometrie I</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <div class="grob-card" data-ds="2" onclick="openDS(2)">
+        <div class="grob-num">DS 2 · 90 min</div>
+        <div class="grob-thema">sin/cos/tan anwenden</div>
+        <ul class="grob-items">
+          <li class="grob-item">Seiten berechnen</li>
+          <li class="grob-item">Winkel berechnen</li>
+          <li class="grob-item">Anwendungsaufg.</li>
+          <li class="grob-item">AB_Trigonometrie II</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <div class="grob-card" data-ds="3" onclick="openDS(3)">
+        <div class="grob-num">DS 3 · 90 min</div>
+        <div class="grob-thema">Vom Winkel zur Funktion</div>
+        <ul class="grob-items">
+          <li class="grob-item">Leiter-Problem</li>
+          <li class="grob-item">Winkel als Variable</li>
+          <li class="grob-item">Graph sin(α)</li>
+          <li class="grob-item">AB_Einführung</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <!-- Phase 2 placeholder card -->
+      <div style="grid-column: 4; display: flex; align-items: center; justify-content: center;">
+        <div style="font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--text-dim); text-align:center; line-height:1.8;">
+          → Weiter in<br>Phase 2
+        </div>
+      </div>
+
+      <!-- Phase 2: Trig-Funktionen -->
+      <div class="grob-phase-sep" style="grid-column: 1 / -1">
+        <span class="grob-phase-sep-label" style="color:var(--ds4)">Phase 2 · Trigonometrische Funktionen</span>
+        <div class="grob-phase-sep-line"></div>
+      </div>
+
+      <div class="grob-card" data-ds="4" onclick="openDS(4)">
+        <div class="grob-num">DS 4 · 90 min</div>
+        <div class="grob-thema">Bogenmaß</div>
+        <ul class="grob-items">
+          <li class="grob-item">Kreisbahn / Auto</li>
+          <li class="grob-item">Bogenlänge</li>
+          <li class="grob-item">rad ↔ Grad</li>
+          <li class="grob-item">AB_Bogenmaß</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <div class="grob-card" data-ds="5" onclick="openDS(5)">
+        <div class="grob-num">DS 5 · 90 min</div>
+        <div class="grob-thema">Einheitskreis &amp; Sinusfunktion</div>
+        <ul class="grob-items">
+          <li class="grob-item">Einheitskreis-Def.</li>
+          <li class="grob-item">Wertetabelle</li>
+          <li class="grob-item">Graph sin &amp; cos</li>
+          <li class="grob-item">AB_TrigoDef</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <div class="grob-card" data-ds="6" onclick="openDS(6)">
+        <div class="grob-num">DS 6 · 90 min</div>
+        <div class="grob-thema">Graphen &amp; Transformationen</div>
+        <ul class="grob-items">
+          <li class="grob-item">a·sin(bx+c)+d</li>
+          <li class="grob-item">Amplitude</li>
+          <li class="grob-item">Periode</li>
+          <li class="grob-item">neues AB</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+      <div class="grob-card" data-ds="7" onclick="openDS(7)">
+        <div class="grob-num">DS 7 · 90 min</div>
+        <div class="grob-thema">Anwendungen &amp; KA-Vorbereitung</div>
+        <ul class="grob-items">
+          <li class="grob-item">Gezeiten</li>
+          <li class="grob-item">Temperaturen</li>
+          <li class="grob-item">Lerntheke</li>
+          <li class="grob-item">neues AB</li>
+        </ul>
+        <span class="grob-arrow">›</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── 02 FEINPLANUNG ─────────────────────────────────────── -->
+  <div class="fein-section">
+    <div class="section-label">02 — Feinplanung</div>
+    <h2 class="section-title" style="margin-bottom:8px">Einstiegsphase · DS 1–3 im Detail</h2>
+    <p style="color:var(--text-dim); font-size:13px; margin-bottom:20px">DS 4–7 folgen nach Bedarf. DS 6 &amp; 7 erfordern noch neue Arbeitsblätter.</p>
+
+    <div class="fein-controls">
+      <button class="ds-tab-btn" onclick="openDS(1)">DS 1</button>
+      <button class="ds-tab-btn" onclick="openDS(2)">DS 2</button>
+      <button class="ds-tab-btn" onclick="openDS(3)">DS 3</button>
+      <button class="ds-tab-btn" style="color:var(--text-dim); opacity:0.5" onclick="openDS(4)">DS 4</button>
+      <button class="ds-tab-btn" style="color:var(--text-dim); opacity:0.5" onclick="openDS(5)">DS 5</button>
+      <button class="ds-tab-btn" style="color:var(--text-dim); opacity:0.5" onclick="openDS(6)">DS 6</button>
+      <button class="ds-tab-btn" style="color:var(--text-dim); opacity:0.5" onclick="openDS(7)">DS 7</button>
+      <button class="toggle-all-btn" onclick="toggleAll()">Alle aus-/einklappen</button>
+    </div>
+
+    <!-- ─── DS 1 ─────────────────────────────────────────────── -->
+    <div class="ds-accordion" data-ds="1" id="ds1">
+      <div class="ds-header" onclick="toggleDS(1)">
+        <span class="ds-num">DS 1</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Geometrie-Wiederholung &amp; Einstieg Trigonometrie</div>
+          <div class="ds-subtitle">Pythagoras · ähnliche Dreiecke · Definition sin/cos/tan · erste Anwendungen</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">EA / PA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+
+      <div class="ds-body">
+        <div class="body-grid">
+
+          <div class="body-card">
+            <div class="body-card-title">Lernziele</div>
+            <ul class="lz-list">
+              <li><span class="lz-num">L1</span> SuS wiederholen Satz des Pythagoras und ähnliche Dreiecke sicher.</li>
+              <li><span class="lz-num">L2</span> SuS erkennen, dass Seitenverhältnisse nur vom Winkel abhängen – nicht von der Dreiecksgröße.</li>
+              <li><span class="lz-num">L3</span> SuS benennen sin α, cos α und tan α korrekt und berechnen erste Beispiele.</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Materialien</div>
+            <ul class="mat-list">
+              <li><span class="mat-icon">📐</span> Geodreieck, Taschenrechner (GTR)</li>
+              <li><span class="mat-icon">📄</span> AB_Trigonometrie.docx – Theorie-Teil <span class="mat-ok">✓ vorhanden</span></li>
+              <li><span class="mat-icon">📄</span> AB_Trigonometrie – Aufg. 1 &amp; 2 <span class="mat-ok">✓ vorhanden</span></li>
+              <li><span class="mat-icon">🖥</span> Beamer: ähnliche Dreiecke visualisieren (GeoGebra)</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Tafelbild</div>
+            <div class="tafelbild-box">
+Rechtwinkliges Dreieck ABC:
+  Hypotenuse c (gegenüber 90°)
+  Ankathete  → liegt am Winkel α
+  Gegenkathete → liegt gegenüber α
+
+sin α = Gegenkathete / Hypotenuse
+cos α = Ankathete   / Hypotenuse
+tan α = Gegenkathete / Ankathete
+
+Merkhilfe:  SOH – CAH – TOA
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Differenzierung -->
+        <div class="body-card" style="margin-bottom:16px">
+          <div class="body-card-title">Differenzierung</div>
+          <table class="diff-table">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                <th>Fokus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(74,124,255,0.1);color:var(--ds1)">Basis</span></td>
+                <td>Theorie-Teil lesen, Beispiel a) nachrechnen, Aufg. 1a (Dachraum-Breite)</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(123,94,167,0.1);color:var(--ds2)">Mittel</span></td>
+                <td>Aufg. 1a + 1b (Tapetenbahn), Aufg. 2 (Satteldach)</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(0,184,148,0.1);color:var(--ds3)">Profi</span></td>
+                <td>Aufg. 1+2+Zusatz: sin β &amp; cos β, Beziehung sin/cos komplementärer Winkel erkennen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Zeitplan -->
+        <div class="body-card">
+          <div class="body-card-title">Zeitplan</div>
+          <table class="zeit-table">
+            <thead>
+              <tr>
+                <th>Zeit</th>
+                <th>Phase</th>
+                <th>Inhalt / Lehreraktivität</th>
+                <th>SuS-Aktivität</th>
+                <th>SF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="zeit-time">0–10'</td>
+                <td><span class="phase-badge phase-einstieg">Einstieg</span></td>
+                <td>Foto zeigen: Dachneigung, Treppenrampe, Bergpfad. Frage: „Wie steil ist das?" – Gesprächsimpuls. Tagesziel nennen.</td>
+                <td>Schätzen, diskutieren</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">10–25'</td>
+                <td><span class="phase-badge phase-erarbeitung">Wiederholung</span></td>
+                <td>Pythagoras kurz reaktivieren (1–2 Beispiele an der Tafel). Ähnliche Dreiecke: GeoGebra zeigen – Winkel fixiert, Größe variiert, Verhältnis bleibt gleich.</td>
+                <td>Mitrechnen, Beobachtung formulieren</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">25–45'</td>
+                <td><span class="phase-badge phase-erarbeitung">Erarbeitung</span></td>
+                <td>AB_Trigonometrie Theorie-Teil ausgeben. Definitionen sin/cos/tan erarbeiten. Tafelbild SOH–CAH–TOA entwickeln. GTR-Eingabe zeigen (sin, cos, tan &amp; Umkehrfunktionen).</td>
+                <td>Lesen, Beispiel a) nachrechnen, Fragen stellen</td>
+                <td><span class="sf-badge">EA→Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">45–80'</td>
+                <td><span class="phase-badge phase-uebung">Übung</span></td>
+                <td>Aufg. 1 &amp; 2 ausgeben. Beobachten, differenziert helfen. Hinweis: Aufg. 3 entfällt (→ Aufg. 4 bei Zeit).</td>
+                <td>Aufgaben bearbeiten, PA möglich</td>
+                <td><span class="sf-badge">EA / PA</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">80–90'</td>
+                <td><span class="phase-badge phase-sicherung">Sicherung</span></td>
+                <td>Aufg. 1 besprechen, typische Fehler thematisieren (Ankathete/Gegenkathete verwechseln). Ausblick DS 2.</td>
+                <td>Korrekturen, Fragen</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hinweis-box">
+          <strong>Hinweis zu Aufgabe 3:</strong> Die Aufgabe „Hangabtriebskraft / schiefe Ebene" aus AB_Trigonometrie ist für einen kaufmännischen BK1 zu stark physikalisch geprägt. Sie wird übersprungen. Bei Bedarf kann als Ersatz eine einfache Rampenaufgabe aus dem Logistikkontext eingefügt werden (z.B. Laderampe für LKW: Neigungswinkel, Rampenbreite, Höhe).
+        </div>
+
+      </div>
+    </div><!-- /DS 1 -->
+
+    <!-- ─── DS 2 ─────────────────────────────────────────────── -->
+    <div class="ds-accordion" data-ds="2" id="ds2">
+      <div class="ds-header" onclick="toggleDS(2)">
+        <span class="ds-num">DS 2</span>
+        <div class="ds-title-group">
+          <div class="ds-title">sin/cos/tan anwenden</div>
+          <div class="ds-subtitle">Seiten und Winkel berechnen · Anwendungsaufgaben · GTR-gestützt</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">PA / EA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+
+      <div class="ds-body">
+        <div class="body-grid">
+
+          <div class="body-card">
+            <div class="body-card-title">Lernziele</div>
+            <ul class="lz-list">
+              <li><span class="lz-num">L1</span> SuS berechnen unbekannte Seiten im rechtwinkligen Dreieck mithilfe von sin/cos/tan.</li>
+              <li><span class="lz-num">L2</span> SuS ermitteln unbekannte Winkel mit den Umkehrfunktionen (arcsin, arccos, arctan / GTR).</li>
+              <li><span class="lz-num">L3</span> SuS lösen selbstständig Anwendungsaufgaben aus geometrischen Kontexten.</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Materialien</div>
+            <ul class="mat-list">
+              <li><span class="mat-icon">📄</span> AB_Trigonometrie – Aufg. 2, 4, 5, 6 <span class="mat-ok">✓ vorhanden</span></li>
+              <li><span class="mat-icon">🖩</span> GTR / Taschenrechner</li>
+              <li><span class="mat-icon">📐</span> Lineal, Geodreieck (für Skizzen)</li>
+              <li><span class="mat-icon">📋</span> Lösungsblatt (für Selbstkontrolle)</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Tafelbild</div>
+            <div class="tafelbild-box">
+Seite berechnen:
+  sin α = GK/HY  →  GK = HY · sin α
+  cos α = AK/HY  →  AK = HY · cos α
+  tan α = GK/AK  →  GK = AK · tan α
+
+Winkel berechnen:
+  sin α = 0,65
+  α = arcsin(0,65) ≈ 40,5°
+  [GTR: 2nd/SHIFT → sin → 0.65]
+
+Vorgehen bei Textaufgaben:
+  1. Skizze (immer!)
+  2. Bekannte / Gesuchte eintragen
+  3. Formel wählen
+  4. Berechnen, Probe, Einheit
+            </div>
+          </div>
+
+        </div>
+
+        <div class="body-card" style="margin-bottom:16px">
+          <div class="body-card-title">Aufgabenauswahl &amp; Differenzierung</div>
+          <table class="diff-table">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                <th>Aufgaben</th>
+                <th>Schwerpunkt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(74,124,255,0.1);color:var(--ds1)">Basis</span></td>
+                <td>Aufg. 2 (Satteldach)</td>
+                <td>Winkel berechnen, Skizze vorgegeben</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(123,94,167,0.1);color:var(--ds2)">Mittel</span></td>
+                <td>Aufg. 2 + Aufg. 4 (Turmbeobachtung)</td>
+                <td>Seite + Winkel, Skizze selbst anfertigen</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(0,184,148,0.1);color:var(--ds3)">Profi</span></td>
+                <td>Aufg. 2 + 4 + 5 (Pyramide) + 6 (Eisenbahn)</td>
+                <td>Mehrstufige Berechnung, Volumen, Querschnitt</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="body-card">
+          <div class="body-card-title">Zeitplan</div>
+          <table class="zeit-table">
+            <thead>
+              <tr>
+                <th>Zeit</th>
+                <th>Phase</th>
+                <th>Inhalt / Lehreraktivität</th>
+                <th>SuS-Aktivität</th>
+                <th>SF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="zeit-time">0–12'</td>
+                <td><span class="phase-badge phase-einstieg">Wiederholung</span></td>
+                <td>Quiz an der Tafel: 3 Schnellaufgaben (sin/cos/tan ablesen, Formel aufstellen). Besprechung im Plenum.</td>
+                <td>Quiz bearbeiten, Lösungen vergleichen</td>
+                <td><span class="sf-badge">EA→Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">12–30'</td>
+                <td><span class="phase-badge phase-erarbeitung">Erarbeitung</span></td>
+                <td>GTR-Bedienung: arcsin/arccos/arctan zeigen und üben. 1–2 Musteraufgaben gemeinsam vorrechnen (Seite gesucht / Winkel gesucht). Tafelbild Vorgehen entwickeln.</td>
+                <td>Musteraufgaben mitrechnen, GTR ausprobieren</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">30–78'</td>
+                <td><span class="phase-badge phase-uebung">Übung</span></td>
+                <td>Aufgaben ausgeben (nach Niveau). Beobachten, gezielte Impulse geben. Bei Schwierigkeiten: Skizze fehlt? Falsche Kathete? GTR-Modus (Grad vs. Bogenmaß)?</td>
+                <td>Aufgaben selbstständig bearbeiten</td>
+                <td><span class="sf-badge">EA / PA</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">78–90'</td>
+                <td><span class="phase-badge phase-sicherung">Sicherung</span></td>
+                <td>Aufg. 4 (Turmbeobachtung) gemeinsam besprechen – typisches Zweischritt-Problem. Ausblick DS 3: Was ist, wenn α sich verändert?</td>
+                <td>Korrekturen, Fragen stellen</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hinweis-box">
+          <strong>Überleitung zu DS 3:</strong> Am Schluss gezielte Frage stellen: „Wir haben bis jetzt immer einen <em>festen</em> Winkel gegeben gehabt. Was passiert, wenn α eine Variable ist – also alle Winkel von 0° bis 360° durchläuft?" → Motivation für den Funktionsbegriff.
+        </div>
+
+      </div>
+    </div><!-- /DS 2 -->
+
+    <!-- ─── DS 3 ─────────────────────────────────────────────── -->
+    <div class="ds-accordion" data-ds="3" id="ds3">
+      <div class="ds-header" onclick="toggleDS(3)">
+        <span class="ds-num">DS 3</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Vom Winkel zur Funktion</div>
+          <div class="ds-subtitle">Leiter-Problem · Winkel als Variable · Tabelle &amp; Graph · f(α) = sin α als Funktion</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">EA / PA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+
+      <div class="ds-body">
+        <div class="body-grid">
+
+          <div class="body-card">
+            <div class="body-card-title">Lernziele</div>
+            <ul class="lz-list">
+              <li><span class="lz-num">L1</span> SuS erkennen den Winkel α als Variable und stellen sin α als Funktion dar.</li>
+              <li><span class="lz-num">L2</span> SuS erstellen eine Wertetabelle für a(α) = l · cos α und zeichnen den zugehörigen Graphen.</li>
+              <li><span class="lz-num">L3</span> SuS beschreiben qualitativ das Verhalten von cos α für α → 90° und erkennen den wellenförmigen Verlauf als neues Funktionsmuster.</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Materialien</div>
+            <ul class="mat-list">
+              <li><span class="mat-icon">📄</span> 01_AB_Einführung.docx – komplett <span class="mat-ok">✓ sehr gut</span></li>
+              <li><span class="mat-icon">🖩</span> GTR</li>
+              <li><span class="mat-icon">📏</span> Lineal, Millimeterpapier (für Graph in Teil c)</li>
+              <li><span class="mat-icon">🖥</span> Optional: GeoGebra-Applet Leiter (Dynamik live zeigen)</li>
+            </ul>
+          </div>
+
+          <div class="body-card">
+            <div class="body-card-title">Tafelbild</div>
+            <div class="tafelbild-box">
+Leiter: l = 3,46m lehnt an Wand
+  a(α) = l · cos α = 3,46 · cos α
+
+α ist jetzt eine VARIABLE (0° bis 90°)
+→ zu jedem Winkel gehört ein Abstand
+
+α:   60°    70°    75°    80°
+a: 1,73m  1,18m  0,90m  0,60m
+
+Graph: a auf y-Achse, α auf x-Achse
+  → kein linearer Graph
+  → das ist f(α) = cos α skaliert
+            </div>
+          </div>
+
+        </div>
+
+        <div class="body-card" style="margin-bottom:16px">
+          <div class="body-card-title">Differenzierung</div>
+          <table class="diff-table">
+            <thead>
+              <tr><th>Niveau</th><th>Fokus</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(74,124,255,0.1);color:var(--ds1)">Basis</span></td>
+                <td>Teil a) Gleichung aufstellen (mit Hilfestellung), Teil b) Tabelle ausfüllen</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(123,94,167,0.1);color:var(--ds2)">Mittel</span></td>
+                <td>a) + b) + c) Graph zeichnen, Verlauf beschreiben</td>
+              </tr>
+              <tr>
+                <td><span class="niveau-badge" style="background:rgba(0,184,148,0.1);color:var(--ds3)">Profi</span></td>
+                <td>a)–c) + Zusatzfrage: Was ändert sich, wenn l = 5m? Was bleibt gleich? → Normierung auf cos α</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="body-card">
+          <div class="body-card-title">Zeitplan</div>
+          <table class="zeit-table">
+            <thead>
+              <tr>
+                <th>Zeit</th>
+                <th>Phase</th>
+                <th>Inhalt / Lehreraktivität</th>
+                <th>SuS-Aktivität</th>
+                <th>SF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="zeit-time">0–10'</td>
+                <td><span class="phase-badge phase-einstieg">Einstieg</span></td>
+                <td>Rückbezug DS 2-Abschluss: Skizze Leiter an Wand. „Was passiert mit dem Abstand a, wenn wir die Leiter steiler stellen?" – Vermutungen einholen. AB_Einführung ausgeben.</td>
+                <td>Vermutungen äußern, Skizze betrachten</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">10–30'</td>
+                <td><span class="phase-badge phase-erarbeitung">Erarbeitung</span></td>
+                <td>Teil a) gemeinsam: Gleichung a(α) = l · cos α entwickeln. Übergang zum Variablengedanken erklären: „α ist nicht mehr eine bestimmte Zahl, sondern läuft durch alle Werte."</td>
+                <td>Gleichung aufstellen, Übergang nachvollziehen</td>
+                <td><span class="sf-badge">EA→Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">30–60'</td>
+                <td><span class="phase-badge phase-uebung">Übung</span></td>
+                <td>Teil b): Tabelle ausfüllen (GTR). Beobachten, GTR-Schwierigkeiten ansprechen. Teil c): Graph zeichnen – sorgfältig auf Millimeterpapier.</td>
+                <td>Tabelle + Graph selbstständig</td>
+                <td><span class="sf-badge">EA / PA</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">60–78'</td>
+                <td><span class="phase-badge phase-sicherung">Sicherung I</span></td>
+                <td>Graph an Tafel skizzieren / GeoGebra zeigen. Verlauf beschreiben: fallend, nicht-linear, → 0 bei 90°. Begriff „trigonometrische Funktion" einführen.</td>
+                <td>Graph vergleichen, Verlauf in eigenen Worten beschreiben</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+              <tr>
+                <td class="zeit-time">78–90'</td>
+                <td><span class="phase-badge phase-ausblick">Ausblick</span></td>
+                <td>Frage: „Was passiert, wenn α über 90° hinausgeht? Über 360°?" → Pfeile über die x-Achse hinaus. Bogenmaß als natürlicheres Maß ankündigen. DS 4 kurz vorstellen.</td>
+                <td>Neugier wecken, Fragen</td>
+                <td><span class="sf-badge">Plenum</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hinweis-box">
+          <strong>Didaktischer Schlüsselmoment:</strong> Der Übergang von „sin/cos als Verhältnis bei festem Winkel" zu „sin/cos als Funktion mit variablem Argument" ist der konzeptionell schwierigste Schritt der Einheit. Hier lohnt es sich, Zeit zu lassen und verschiedene Darstellungsformen nebeneinander zu halten: die Skizze des Dreiecks, die Tabelle, den Graphen.
+        </div>
+
+      </div>
+    </div><!-- /DS 3 -->
+
+    <!-- ─── DS 4–7: Platzhalter ───────────────────────────────── -->
+
+    <div class="ds-accordion" data-ds="4" id="ds4">
+      <div class="ds-header" onclick="toggleDS(4)">
+        <span class="ds-num">DS 4</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Bogenmaß</div>
+          <div class="ds-subtitle">Kreisbahn · Bogenlänge · Umrechnung rad ↔ Grad · AB_Bogenmaß</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">EA / PA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+      <div class="ds-body">
+        <p style="color:var(--text-dim); font-size:13px; font-style:italic">
+          Feinplanung folgt nach Bedarf. Material: 02_AB_Bogenmaß.doc (→ in .docx konvertieren). Kontext: Auto auf Kreisbahn. Schwerpunkte: Bogenlänge b = r·φ, Umrechnung α° → φ rad = α·π/180, GTR-Modus Bogenmaß.
+        </p>
+      </div>
+    </div>
+
+    <div class="ds-accordion" data-ds="5" id="ds5">
+      <div class="ds-header" onclick="toggleDS(5)">
+        <span class="ds-num">DS 5</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Einheitskreis &amp; Sinusfunktion</div>
+          <div class="ds-subtitle">Definition über Einheitskreis · Wertetabelle · Graph sin &amp; cos · AB_TrigoDef</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">EA / PA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+      <div class="ds-body">
+        <p style="color:var(--text-dim); font-size:13px; font-style:italic">
+          Feinplanung folgt nach Bedarf. Material: 03_AB_TrigoDef.docx. Kern: Einheitskreis P(cos x | sin x), Wertetabelle 0°–405° in Grad und Bogenmaß, Schaubilder sin und cos im Koordinatensystem skizzieren.
+        </p>
+      </div>
+    </div>
+
+    <div class="ds-accordion" data-ds="6" id="ds6">
+      <div class="ds-header" onclick="toggleDS(6)">
+        <span class="ds-num">DS 6</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Graphen &amp; Transformationen</div>
+          <div class="ds-subtitle">a·sin(bx+c)+d · Amplitude · Periode · Phasenverschiebung · <em>neues AB</em></div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">PA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+      <div class="ds-body">
+        <p style="color:var(--text-dim); font-size:13px; font-style:italic">
+          Neues AB erforderlich. Feinplanung folgt nach Bedarf. Schwerpunkte: Parameter a (Amplitude), b (Periode T = 2π/b), c (Phasenverschiebung), d (Verschiebung). Desmos/GeoGebra als Erkundungswerkzeug gut geeignet.
+        </p>
+      </div>
+    </div>
+
+    <div class="ds-accordion" data-ds="7" id="ds7">
+      <div class="ds-header" onclick="toggleDS(7)">
+        <span class="ds-num">DS 7</span>
+        <div class="ds-title-group">
+          <div class="ds-title">Anwendungen &amp; KA-Vorbereitung</div>
+          <div class="ds-subtitle">Periodische Vorgänge · Gezeiten / Temperatur · Lerntheke · Ich-kann-Liste</div>
+        </div>
+        <div class="ds-meta">
+          <span class="ds-time-badge">90 min</span>
+          <span class="ds-sz-badge">PA / EA</span>
+        </div>
+        <span class="ds-chevron">›</span>
+      </div>
+      <div class="ds-body">
+        <p style="color:var(--text-dim); font-size:13px; font-style:italic">
+          Neues AB erforderlich. Feinplanung folgt nach Bedarf. Anwendungskontexte für kaufmännisch: Tageskurse (zyklische Muster), Saisonumsätze, Temperaturganglinien, Gezeiten. Lerntheke mit 3–4 Niveaustufen sinnvoll als KA-Vorbereitung.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /fein-section -->
+
+  <!-- ─── 03 WEITERE MATERIALIEN ─────────────────────────────── -->
+  <div style="margin-bottom:40px">
+    <div class="section-label">03 — Weitere Materialien (Vorschläge, noch nicht ausgearbeitet)</div>
+    <h2 class="section-title">Ergänzende digitale &amp; analoge Materialien</h2>
+
+    <ul class="further-mat-list">
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">🔵</span>
+        <div class="fmi-content">
+          <div class="fmi-title">GeoGebra – Einheitskreis interaktiv</div>
+          <div class="fmi-desc">Dynamisches Applet: Punkt P läuft auf Einheitskreis, sin/cos werden live als Koordinate abgelesen. Ideal zur Visualisierung in DS 5. Fertige Applets auf geogebra.org vorhanden (z.B. „Einheitskreis und Sinusfunktion").</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 5</span>
+            <span class="fmi-ds-tag">DS 6</span>
+            <span class="fmi-ds-tag">zeitlimitiert</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-hoch">empfohlen</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">📊</span>
+        <div class="fmi-content">
+          <div class="fmi-title">Desmos – Transformationen erkunden</div>
+          <div class="fmi-desc">Schieberegler für a, b, c, d in f(x) = a·sin(b·x+c)+d. SuS verändern Parameter und beobachten Auswirkungen auf den Graphen. Kein Account nötig, direkt im Browser. Für DS 6 besonders geeignet.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 6</span>
+            <span class="fmi-ds-tag">Tablets/Laptops</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-hoch">empfohlen</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">🃏</span>
+        <div class="fmi-content">
+          <div class="fmi-title">LearningApps – sin/cos/tan Zuordnung</div>
+          <div class="fmi-desc">Drag-&amp;-Drop: Dreieck-Skizze → richtige Formel → Verhältnis. Gut als 10-Minuten-Einstieg in DS 2 oder als Übung für Schnelle. Auf learningapps.org gibt es fertige Bausteine für Trigonometrie.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 1</span>
+            <span class="fmi-ds-tag">DS 2</span>
+            <span class="fmi-ds-tag">Wiederholung</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-mittel">optional</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">🃏</span>
+        <div class="fmi-content">
+          <div class="fmi-title">Domino-Karten – Trigonometrische Werte</div>
+          <div class="fmi-desc">Klassische Domino-Kette: Karte zeigt Dreieck (oder Formel), nächste Karte zeigt Ergebnis. Format: 20 Kartenpaare für sin/cos/tan bekannter Winkel. Gut als Abschlussaktivität in DS 5 oder als KA-Vorbereitung.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 5</span>
+            <span class="fmi-ds-tag">DS 7</span>
+            <span class="fmi-ds-tag">PA</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-mittel">optional</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">📋</span>
+        <div class="fmi-content">
+          <div class="fmi-title">Ich-kann-Liste (Checkliste zur KA-Vorbereitung)</div>
+          <div class="fmi-desc">Selbsteinschätzung: SuS bewerten ihre Sicherheit bei jedem Lernziel (☐ noch unsicher / ☐ geht so / ☐ sicher). Hilft zur Steuerung der Lerntheke in DS 7. Einfach selbst zu erstellen, 1 DIN A4-Seite.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 7</span>
+            <span class="fmi-ds-tag">KA-Vorbereitung</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-hoch">empfohlen</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">🎥</span>
+        <div class="fmi-content">
+          <div class="fmi-title">Video: „Sinus erklärt" (z.B. Lehrer Schmidt, Daniel Jung)</div>
+          <div class="fmi-desc">Als Hausaufgabe oder für Nachzügler: 5–8 min Erklärvideos zum Einheitskreis und zur Sinusfunktion. YouTube, kein Extraaufwand. Nicht im Unterricht abspielen – lieber als Verweis ins Heft.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 4–5</span>
+            <span class="fmi-ds-tag">Hausaufgabe</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-optional">bei Bedarf</span>
+      </li>
+
+      <li class="further-mat-item">
+        <span class="fmi-icon">📝</span>
+        <div class="fmi-content">
+          <div class="fmi-title">Mentimeter – Einstiegsabfrage „Wo begegnet uns Periodisches?"</div>
+          <div class="fmi-desc">Wortwolke: SuS nennen Dinge, die sich wiederholen (Jahreszeiten, Herzschlag, Gezeiten, Ampeln, Umsatz im Sommer/Winter...). Schöner Einstieg für DS 6 oder DS 7, schafft Anwendungsbewusstsein.</div>
+          <div class="fmi-ds-tags">
+            <span class="fmi-ds-tag">DS 6</span>
+            <span class="fmi-ds-tag">DS 7</span>
+            <span class="fmi-ds-tag">Einstieg</span>
+          </div>
+        </div>
+        <span class="fmi-prio prio-optional">bei Bedarf</span>
+      </li>
+
+    </ul>
+  </div>
+
+</main>
+
+<script>
+function toggleDS(n) {
+  const el = document.getElementById('ds' + n);
+  el.classList.toggle('open');
+}
+
+function openDS(n) {
+  const el = document.getElementById('ds' + n);
+  el.classList.add('open');
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+
+let allOpen = false;
+function toggleAll() {
+  allOpen = !allOpen;
+  document.querySelectorAll('.ds-accordion').forEach(el => {
+    if (allOpen) el.classList.add('open');
+    else el.classList.remove('open');
+  });
+}
+
+// Grob-cards open corresponding DS on click
+document.querySelectorAll('.grob-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const ds = card.dataset.ds;
+    openDS(ds);
+    const feinEl = document.querySelector('.fein-section');
+    if (feinEl) setTimeout(() => feinEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  });
+});
+</script>
+</body>
+</html>
