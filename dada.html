@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS 2 · h,x-Diagramm & Luftzustände</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f5f4f0; color: #1a1a18; padding: 2rem 1rem; min-height: 100vh; }
+  .container { max-width: 700px; margin: 0 auto; }
+  .sp-header { margin-bottom: 1rem; }
+  .sp-title { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 8px; }
+  .sp-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sp-badge { font-size: 11px; padding: 3px 9px; border-radius: 4px; background: #fff; border: 0.5px solid #d3d1c7; color: #5f5e5a; }
+  .anknuepfung { margin-bottom: 12px; padding: 9px 12px; border-radius: 8px; font-size: 12px; background: #eaf3de; border: 0.5px solid #c0dd97; color: #27500a; line-height: 1.6; }
+  .phase-block { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .phase-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; user-select: none; }
+  .phase-header:hover { background: #f5f4f0; }
+  .phase-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .phase-name { font-weight: 500; color: #1a1a18; flex: 1; font-size: 14px; }
+  .phase-time { font-size: 12px; color: #888780; white-space: nowrap; }
+  .phase-chevron { font-size: 10px; color: #888780; transition: transform 0.2s; }
+  .phase-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .phase-body.open { max-height: 600px; border-top: 0.5px solid #d3d1c7; }
+  .phase-content { padding: 14px 16px; }
+  .row { display: flex; gap: 12px; margin-bottom: 10px; }
+  .row:last-of-type { margin-bottom: 0; }
+  .label { font-size: 10px; font-weight: 600; color: #888780; min-width: 88px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 2px; }
+  .value { font-size: 13px; color: #2c2c2a; line-height: 1.6; }
+  .divider { height: 0.5px; background: #f1efe8; margin: 8px 0; }
+  .note { margin-top: 12px; padding: 9px 11px; border-radius: 6px; font-size: 12px; background: #e6f1fb; border: 0.5px solid #b5d4f4; color: #0c447c; line-height: 1.6; }
+  .kompetenz-box { margin-top: 16px; padding: 10px 14px; border-radius: 8px; font-size: 12px; background: #f1efe8; border-left: 3px solid #b4b2a9; color: #5f5e5a; line-height: 1.7; }
+  .kompetenz-box strong { color: #2c2c2a; }
+
+  .section-title { font-size: 15px; font-weight: 600; color: #1a1a18; margin: 1.5rem 0 0.75rem; }
+
+  .gruppe { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .gruppe-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; user-select: none; }
+  .gruppe-header:hover { background: #f5f4f0; }
+  .gruppe-label { font-weight: 500; font-size: 14px; color: #1a1a18; flex: 1; }
+  .gruppe-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .gruppe-body.open { max-height: 400px; border-top: 0.5px solid #d3d1c7; }
+  .gruppe-body ol { padding: 12px 16px 12px 32px; }
+  .gruppe-body li { font-size: 13px; color: #2c2c2a; line-height: 1.7; margin-bottom: 4px; }
+
+  .mat-block { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .mat-label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .mat-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: baseline; }
+  .mat-item:last-child { margin-bottom: 0; }
+  .mat-dot { width: 6px; height: 6px; border-radius: 50%; background: #b4b2a9; flex-shrink: 0; margin-top: 6px; }
+  .mat-text { font-size: 13px; color: #2c2c2a; line-height: 1.6; }
+  .mat-text a { color: #185fa5; text-decoration: none; }
+  .mat-text a:hover { text-decoration: underline; }
+  .mat-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: #eaf3de; border: 0.5px solid #c0dd97; color: #27500a; margin-left: 4px; vertical-align: middle; }
+  .mat-tag.blau { background: #e6f1fb; border-color: #b5d4f4; color: #0c447c; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
+  th { text-align: left; font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 8px; border-bottom: 0.5px solid #d3d1c7; }
+  td { padding: 7px 8px; border-bottom: 0.5px solid #f1efe8; color: #2c2c2a; vertical-align: top; }
+  td a { color: #185fa5; text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  tr:last-child td { border-bottom: none; }
+
+  footer { margin-top: 2rem; font-size: 11px; color: #b4b2a9; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="sp-header">
+    <div class="sp-title">DS 2 · h,x-Diagramm & Luftzustände</div>
+    <div class="sp-meta">
+      <span class="sp-badge">Sek II · TBK I</span>
+      <span class="sp-badge">90 Minuten</span>
+      <span class="sp-badge">Gruppenarbeit am Computer</span>
+      <span class="sp-badge">Kein Frontalunterricht</span>
+    </div>
+  </div>
+
+  <div class="anknuepfung">
+    ↩ Anknüpfung DS 1: Schüler kennen bereits Luftfeuchte (rel./abs.), CO₂ und Behaglichkeit — das h,x-Diagramm ist das Werkzeug, um diese Größen präzise darzustellen und zu berechnen.
+  </div>
+
+  <div id="phases"></div>
+
+  <div class="kompetenz-box">
+    <strong>Lehrplanbezug:</strong> Thermische Behaglichkeit, relative und absolute Luftfeuchte, Luftzustände mit h,x-Diagramm · Zustandsänderungen feuchter Luft beschreiben und darstellen
+  </div>
+
+  <!-- Leitfragen -->
+  <div class="section-title">Leitfragen je Gruppe</div>
+  <div id="gruppen"></div>
+
+  <!-- Materialien -->
+  <div class="section-title">Materialien</div>
+
+  <div class="mat-block">
+    <div class="mat-label">📄 Druckbares h,x-Diagramm (1× pro Gruppe)</div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://www.halmburger.eu/download/hx-Diagramm_Halmburger.pdf" target="_blank">Halmburger PDF</a> — sauber, gut lesbar, 1,013 bar (Meereshöhe) <span class="mat-tag">empfohlen</span></div></div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://www.dolder-ing.ch/wissen/Lueftung-Klima/h-x-diagramm/Mollier_h-x-diagramm_pdf-vorlagen-dowload.htm" target="_blank">Dolder Ingenieure</a> — mehrere Varianten, auch für ~490 m (Stuttgart)</div></div>
+  </div>
+
+  <div class="mat-block">
+    <div class="mat-label">💻 Online-Tools (am Computer)</div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://tlk-energy.de/phasendiagramme/mollier-h-x" target="_blank">TLK Energy — interaktiver Rechner</a> — Punkte einzeichnen, Zustandsänderungen live sehen <span class="mat-tag">ideal Gruppe C + D</span></div></div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://www.condair.de/fachwissen/hx-diagramm" target="_blank">Condair — Erklärseite</a> — alle Zustandsänderungen mit Beispielen erklärt</div></div>
+  </div>
+
+  <div class="mat-block">
+    <div class="mat-label">📖 Recherchequellen je Gruppe</div>
+    <table>
+      <thead><tr><th>Gruppe</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>A – Aufbau & Achsen</td><td><a href="https://de.wikipedia.org/wiki/Mollier-h-x-Diagramm" target="_blank">Wikipedia: Mollier-h-x-Diagramm</a></td></tr>
+        <tr><td>B – Sättigungslinie, Taupunkt</td><td><a href="https://www.condair.de/fachwissen/hx-diagramm" target="_blank">Condair: Was ist das h,x-Diagramm?</a></td></tr>
+        <tr><td>C – Zustandsänderungen</td><td>Condair + <a href="https://tlk-energy.de/phasendiagramme/mollier-h-x" target="_blank">TLK-Rechner</a> zum Ausprobieren</td></tr>
+        <tr><td>D – Behaglichkeitsfeld, Lüften</td><td><a href="https://hitz-koepfe.de/das-h-x-diagramm-der-feuchten-luft/" target="_blank">hitz-koepfe.de: h-x-Diagramm der feuchten Luft</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mat-block">
+    <div class="mat-label">🎬 Video (optional)</div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://studyflix.de/ingenieurwissenschaften/hx-diagramm-1559" target="_blank">Studyflix: hx-Diagramm</a> — ca. 8 min, kostenlos nach einmaliger Registrierung <span class="mat-tag blau">für schnelle Gruppen</span></div></div>
+  </div>
+
+  <footer>Angewandte Technik · Regenerative Energiesysteme 1 · TBK I · Erstellt mit Claude · 2026</footer>
+</div>
+
+<script>
+const phases = [
+  { name:"Einstieg", time:"ca. 10 min", color:"#5DCAA5",
+    items:[
+      {label:"Anknüpfung", value:"Kurze Runde: Wer hat zuhause CO₂ oder Luftfeuchte gemessen? (optionale HA aus DS 1) — Ergebnisse kurz nennen, keine Auswertung."},
+      {label:"Impuls", value:"Lehrer zeigt das h,x-Diagramm auf dem Beamer — ohne Erklärung. Frage: \"Was seht ihr? Was könnte das darstellen?\" 2–3 spontane Antworten."},
+      {label:"Ziel", value:"Neugier wecken, Komplexität sichtbar machen — und gleichzeitig zeigen: \"Das werden wir heute in Gruppen selbst erarbeiten.\""}
+    ]
+  },
+  { name:"Auftrag & Gruppenbildung", time:"ca. 5 min", color:"#85B7EB",
+    items:[
+      {label:"Gruppen", value:"Gleiche Gruppen wie DS 1 (Kontinuität). Jede Gruppe bekommt einen Teilauftrag zum h,x-Diagramm."},
+      {label:"Aufteilung", value:"Gruppe A: Aufbau & Achsen · Gruppe B: Sättigungslinie, Taupunkt, Nebelgebiet · Gruppe C: Zustandsänderungen (Heizen, Kühlen, Befeuchten) · Gruppe D: Behaglichkeitsfeld + Anwendung Lüften im Winter"},
+      {label:"Material", value:"Leitfragen an der Tafel, Computer, ausgedrucktes h,x-Diagramm (1 pro Gruppe) zum Einzeichnen."}
+    ],
+    note:"Tipp: Ein ausgedrucktes Diagramm in die Hand zu geben macht einen großen Unterschied — die Schüler können darauf zeichnen, Punkte markieren und Pfeile einzeichnen."
+  },
+  { name:"Gruppenarbeit", time:"ca. 40 min", color:"#EF9F27",
+    items:[
+      {label:"Tätigkeit", value:"Gruppen recherchieren ihren Teilaspekt, arbeiten mit dem gedruckten Diagramm und bereiten eine kurze Präsentation vor (Folie oder direkt am Diagramm erklären)."},
+      {label:"Ressourcen", value:"Wikipedia, Condair, TLK-Rechner zum interaktiven Ausprobieren (siehe Materialien unten)."},
+      {label:"Lehrer", value:"Läuft rum, gibt Hilfestellung beim Lesen des Diagramms. Gruppe C und D etwas mehr begleiten (komplexere Aufgaben)."}
+    ],
+    note:"Häufige Stolperfalle: Schüler verwechseln die Achsen oder suchen x auf der falschen Seite. Kurzer Hinweis reicht: \"x ist der Wassergehalt — schaut auf die untere waagerechte Achse.\""
+  },
+  { name:"Kurzpräsentationen", time:"ca. 25 min", color:"#ED93B1",
+    items:[
+      {label:"Reihenfolge", value:"A → B → C → D: Aufbau ergibt sich logisch — erst Struktur, dann Kurven, dann Bewegungen, dann Anwendung."},
+      {label:"Format", value:"Jede Gruppe 5 min: erklärt den anderen ihren Teil, zeigt am Diagramm. Andere Schüler markieren Punkte auf ihrem eigenen Ausdruck."},
+      {label:"Lehrer", value:"Verbindet die vier Teile am Ende: \"Jetzt kann jeder von euch einen Luftzustand in dieses Diagramm einzeichnen und ablesen.\""}
+    ]
+  },
+  { name:"Übung & Sicherung", time:"ca. 10 min", color:"#97C459",
+    items:[
+      {label:"Aufgabe", value:"Gemeinsam 1–2 Punkte ins Diagramm einzeichnen: Außenluft 0°C / 80% rel. Feuchte → ins Zimmer gebracht und auf 20°C erwärmt. Was passiert mit der rel. Feuchte?"},
+      {label:"Bezug DS 1", value:"\"Das ist genau das, was Gruppe C in DS 1 recherchiert hat — jetzt können wir es im Diagramm zeigen.\""},
+      {label:"Ausblick", value:"\"In der nächsten Stunde: Temperatur, Wärme und Wärmestrom — wir verlassen die Luftfeuchte und schauen uns an, was Energie eigentlich bedeutet.\""}
+    ]
+  }
+];
+
+const gruppen = [
+  { name:"Gruppe A — Aufbau & Achsen des h,x-Diagramms", color:"#5DCAA5",
+    fragen:["Wofür stehen h und x im Diagramm? Erklärt die Bedeutung beider Größen.","Was zeigt die y-Achse, was die x-Achse?","Was sind Isothermen? Wie verlaufen sie im Diagramm?","Wie liest man einen Luftzustand ab, wenn Temperatur und relative Feuchte bekannt sind?","Zeichnet Punkt A ein: 20°C, 50% relative Feuchte. Welche absolute Feuchte hat dieser Zustand?"]
+  },
+  { name:"Gruppe B — Sättigungslinie, Taupunkt & Nebelgebiet", color:"#85B7EB",
+    fragen:["Was ist die Sättigungslinie? Was passiert, wenn man sie überschreitet?","Was bedeutet „Taupunkt" — und wie findet man ihn im Diagramm?","Was ist das „Nebelgebiet"?","Warum beschlägt ein kaltes Glas im Sommer?","Zeichnet: Luftzustand 25°C / 60% rel. Feuchte → Luft wird abgekühlt bis zur Sättigung. Bei welcher Temperatur beginnt Kondensation?"]
+  },
+  { name:"Gruppe C — Zustandsänderungen im Diagramm", color:"#EF9F27",
+    fragen:["Was passiert mit einem Luftzustand beim Heizen? Zeichnet den Pfeil im Diagramm ein.","Was passiert beim Kühlen (ohne Kondensation)?","Was passiert beim Befeuchten mit Dampf? Was beim adiabaten Befeuchten?","Welche Richtung hat Entfeuchten im Diagramm?","Erklärt das Wäschetrocknen mithilfe des Diagramms: warme trockene Luft strömt über die Wäsche — was ändert sich?"]
+  },
+  { name:"Gruppe D — Behaglichkeitsfeld & Anwendung Lüften", color:"#97C459",
+    fragen:["Wo liegt das Behaglichkeitsfeld im h,x-Diagramm? Welche Temperatur- und Feuchtewerte umfasst es?","Warum ist die Luft im Winter nach dem Lüften oft sehr trocken? Zeigt den Vorgang im Diagramm.","Außenluft: 0°C, 90% rel. Feuchte → wird auf 22°C erwärmt. Welche relative Feuchte hat sie dann? Liegt das im Behaglichkeitsbereich?","Was könnte man tun, um die Luft im Winter trotzdem behaglich zu halten?","Stellt euer Ergebnis als konkreten Alltagstipp vor: „Im Winter sollte man…, weil…""]
+  }
+];
+
+const pc = document.getElementById('phases');
+phases.forEach((p,i) => {
+  const b = document.createElement('div'); b.className='phase-block';
+  b.innerHTML=`<div class="phase-header" onclick="toggleP(${i})"><div class="phase-dot" style="background:${p.color}"></div><div class="phase-name">${p.name}</div><div class="phase-time">${p.time}</div><div class="phase-chevron" id="pc-${i}">▶</div></div><div class="phase-body" id="pb-${i}"><div class="phase-content">${p.items.map((it,j)=>`${j>0?'<div class="divider"></div>':''}<div class="row"><div class="label">${it.label}</div><div class="value">${it.value}</div></div>`).join('')}${p.note?`<div class="note">${p.note}</div>`:''}</div></div>`;
+  pc.appendChild(b);
+});
+
+const gc = document.getElementById('gruppen');
+gruppen.forEach((g,i) => {
+  const b = document.createElement('div'); b.className='gruppe';
+  b.innerHTML=`<div class="gruppe-header" onclick="toggleG(${i})"><div class="phase-dot" style="background:${g.color}"></div><div class="gruppe-label">${g.name}</div><div class="phase-chevron" id="gc-${i}">▶</div></div><div class="gruppe-body" id="gb-${i}"><ol>${g.fragen.map(f=>`<li>${f}</li>`).join('')}</ol></div>`;
+  gc.appendChild(b);
+});
+
+function toggleP(i){const b=document.getElementById('pb-'+i),c=document.getElementById('pc-'+i),o=b.classList.contains('open');document.querySelectorAll('.phase-body.open').forEach(x=>x.classList.remove('open'));document.querySelectorAll('#phases .phase-chevron').forEach(x=>x.style.transform='');if(!o){b.classList.add('open');c.style.transform='rotate(90deg)';}}
+function toggleG(i){const b=document.getElementById('gb-'+i),c=document.getElementById('gc-'+i),o=b.classList.contains('open');document.querySelectorAll('.gruppe-body.open').forEach(x=>x.classList.remove('open'));document.querySelectorAll('#gruppen .phase-chevron').forEach(x=>x.style.transform='');if(!o){b.classList.add('open');c.style.transform='rotate(90deg)';}}
+
+document.getElementById('pb-0').classList.add('open');
+document.getElementById('pc-0').style.transform='rotate(90deg)';
+</script>
+</body>
+</html>
