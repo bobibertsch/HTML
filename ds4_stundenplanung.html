@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS 4 · Spezifische Wärmekapazität</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f5f4f0; color: #1a1a18; padding: 2rem 1rem; min-height: 100vh; }
+  .container { max-width: 700px; margin: 0 auto; }
+  .sp-header { margin-bottom: 1rem; }
+  .sp-title { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 8px; }
+  .sp-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sp-badge { font-size: 11px; padding: 3px 9px; border-radius: 4px; background: #fff; border: 0.5px solid #d3d1c7; color: #5f5e5a; }
+  .anknuepfung { margin-bottom: 12px; padding: 9px 12px; border-radius: 8px; font-size: 12px; background: #eaf3de; border: 0.5px solid #c0dd97; color: #27500a; line-height: 1.6; }
+  .phase-block { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .phase-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; user-select: none; }
+  .phase-header:hover { background: #f5f4f0; }
+  .phase-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .phase-name { font-weight: 500; color: #1a1a18; flex: 1; font-size: 14px; }
+  .phase-time { font-size: 12px; color: #888780; white-space: nowrap; }
+  .phase-chevron { font-size: 10px; color: #888780; transition: transform 0.2s; }
+  .phase-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .phase-body.open { max-height: 600px; border-top: 0.5px solid #d3d1c7; }
+  .phase-content { padding: 14px 16px; }
+  .row { display: flex; gap: 12px; margin-bottom: 10px; }
+  .row:last-of-type { margin-bottom: 0; }
+  .label { font-size: 10px; font-weight: 600; color: #888780; min-width: 88px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 2px; }
+  .value { font-size: 13px; color: #2c2c2a; line-height: 1.7; }
+  .divider { height: 0.5px; background: #f1efe8; margin: 8px 0; }
+  .note { margin-top: 12px; padding: 9px 11px; border-radius: 6px; font-size: 12px; background: #e6f1fb; border: 0.5px solid #b5d4f4; color: #0c447c; line-height: 1.6; }
+  .kompetenz-box { margin-top: 16px; padding: 10px 14px; border-radius: 8px; font-size: 12px; background: #f1efe8; border-left: 3px solid #b4b2a9; color: #5f5e5a; line-height: 1.7; }
+  .kompetenz-box strong { color: #2c2c2a; }
+  .section-title { font-size: 15px; font-weight: 600; color: #1a1a18; margin: 1.5rem 0 0.75rem; }
+  .gruppe { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .gruppe-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; user-select: none; }
+  .gruppe-header:hover { background: #f5f4f0; }
+  .gruppe-label { font-weight: 500; font-size: 14px; color: #1a1a18; flex: 1; }
+  .gruppe-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .gruppe-body.open { max-height: 500px; border-top: 0.5px solid #d3d1c7; }
+  .gruppe-body ol { padding: 12px 16px 12px 32px; }
+  .gruppe-body li { font-size: 13px; color: #2c2c2a; line-height: 1.7; margin-bottom: 4px; }
+  .mat-block { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .mat-label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .mat-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: baseline; }
+  .mat-item:last-child { margin-bottom: 0; }
+  .mat-dot { width: 6px; height: 6px; border-radius: 50%; background: #b4b2a9; flex-shrink: 0; margin-top: 6px; }
+  .mat-text { font-size: 13px; color: #2c2c2a; line-height: 1.6; }
+  .mat-text a { color: #185fa5; text-decoration: none; }
+  .mat-text a:hover { text-decoration: underline; }
+  .mat-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; background: #eaf3de; border: 0.5px solid #c0dd97; color: #27500a; margin-left: 4px; vertical-align: middle; }
+  .mat-tag.blau { background: #e6f1fb; border-color: #b5d4f4; color: #0c447c; }
+  footer { margin-top: 2rem; font-size: 11px; color: #b4b2a9; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="sp-header">
+    <div class="sp-title">DS 4 · Spezifische Wärmekapazität — Simulation & Rechnung</div>
+    <div class="sp-meta">
+      <span class="sp-badge">Sek II · TBK I</span>
+      <span class="sp-badge">90 Minuten</span>
+      <span class="sp-badge">Gruppenarbeit am Computer</span>
+      <span class="sp-badge">PhET-Simulation</span>
+    </div>
+  </div>
+
+  <div class="anknuepfung">
+    ↩ Anknüpfung DS 3: Schüler kennen Wärme (Q in J/kWh) und Wärmestrom (P in W). Heute kommt der dritte Parameter hinzu: Masse und Stoffeigenschaft — woher kommt c in Q = m·c·ΔT?
+  </div>
+
+  <div id="phases"></div>
+
+  <div class="kompetenz-box">
+    <strong>Lehrplanbezug:</strong> Spezifische Wärmekapazität von Wasser bestimmen · Berechnungen zu Wärmemenge und Wärmestrom durchführen · Tabellenkalkulation einsetzen
+  </div>
+
+  <div class="section-title">Leitfragen je Gruppe</div>
+  <div id="gruppen"></div>
+
+  <div class="section-title">Materialien</div>
+  <div class="mat-block">
+    <div class="mat-label">💻 Simulation</div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes_all.html" target="_blank">PhET — Energy Forms and Changes</a> — HTML5, direkt im Browser, kein Plugin <span class="mat-tag">Gruppe B · Einstieg Beamer</span></div></div>
+  </div>
+  <div class="mat-block">
+    <div class="mat-label">📖 Recherchequellen</div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://studyflix.de/ingenieurwissenschaften/spezifische-waermekapazitaet-5208" target="_blank">Studyflix — Spezifische Wärmekapazität</a> (mit Video)</div></div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://www.tec-science.com/de/thermodynamik-waermelehre/waerme/spezifische-warmekapazitat-von-wasser/" target="_blank">tec-science — Spez. Wärmekapazität von Wasser</a> <span class="mat-tag">Gruppe A + C</span></div></div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://de.wikipedia.org/wiki/Spezifische_W%C3%A4rmekapazit%C3%A4t" target="_blank">Wikipedia — Spezifische Wärmekapazität</a> (Tabelle mit Stoffwerten)</div></div>
+    <div class="mat-item"><div class="mat-dot"></div><div class="mat-text"><a href="https://www.omnicalculator.com/de/physik/spezifische-waermekapazitaet" target="_blank">Omnicalculator — Rechner zum Überprüfen</a> <span class="mat-tag blau">Gruppe C + D</span></div></div>
+  </div>
+
+  <footer>Angewandte Technik · Regenerative Energiesysteme 1 · TBK I · Erstellt mit Claude · 2026</footer>
+</div>
+
+<script>
+const phases = [
+  { name:"Einstieg — Simulation", time:"ca. 10 min", color:"#5DCAA5",
+    items:[
+      {label:"Impuls", value:"Lehrer öffnet PhET \"Energy Forms and Changes\" auf dem Beamer. Vier Materialien: Eisen, Ziegel, Wasser, Olivenöl.<br>Frage: \"Gleiche Heizleistung auf alle vier — welches erwärmt sich am schnellsten?\""},
+      {label:"Demo", value:"Kurze Live-Demo: alle vier gleichzeitig erhitzen, Kurven vergleichen. Wasser ist deutlich langsamer. Frage: \"Warum?\" → Einstieg in spezifische Wärmekapazität."},
+      {label:"Ziel", value:"Intuitives Verständnis schaffen, bevor die Formel kommt. Das Phänomen zuerst — dann die Mathematik."}
+    ]
+  },
+  { name:"Auftrag & Gruppenbildung", time:"ca. 5 min", color:"#85B7EB",
+    items:[
+      {label:"Gruppen", value:"Gleiche Gruppen wie bisher. Jede Gruppe bearbeitet einen Teilauftrag, der am Ende zusammengeführt wird."},
+      {label:"Aufteilung", value:"Gruppe A: Begriff & Formel — Was ist spez. Wärmekapazität? Herleitung Q = m·c·ΔT<br>Gruppe B: Simulation — PhET gezielt nutzen, Messwerte ablesen, Stoffvergleich dokumentieren<br>Gruppe C: Rechnen mit Wasser — Aufgaben mit Q = m·c·ΔT (Heizung, Wasserkocher, Pufferspeicher)<br>Gruppe D: Tabellenkalkulation — Berechnungen in Excel/Calc aufbauen, Ergebnisse visualisieren"},
+      {label:"Material", value:"Computer, PhET-Simulation (Link unten), Tabellenkalkulation, Leitfragen an der Tafel."}
+    ],
+    note:"Gruppe B arbeitet die ganze Zeit mit der Simulation — sie ist gleichzeitig Messinstrument und Lernumgebung. Wichtig: konkrete Zahlenwerte notieren, nicht nur qualitativ beschreiben."
+  },
+  { name:"Gruppenarbeit", time:"ca. 40 min", color:"#EF9F27",
+    items:[
+      {label:"Tätigkeit", value:"Gruppen arbeiten parallel. Gruppe B teilt zwischendurch Messwerte mit Gruppe A und C, damit diese realistische Zahlen für ihre Rechnungen haben."},
+      {label:"Lehrer", value:"Gruppe D im Blick behalten — Tabellenkalkulation kann ausufern. Ziel: einfache Tabelle mit m, c, ΔT als Eingabe → Q als Ausgabe. Nicht mehr."},
+      {label:"Ergebnis", value:"A: Formel + Erklärung · B: Tabelle mit Messwerten · C: 3 gelöste Aufgaben · D: funktionierende Tabellenkalkulation"}
+    ],
+    note:"c(Wasser) = 4200 J/(kg·K) = 4,2 kJ/(kg·K) ist der zentrale Merkwert dieser DS — Schüler sollen ihn am Ende kennen."
+  },
+  { name:"Kurzpräsentationen", time:"ca. 25 min", color:"#ED93B1",
+    items:[
+      {label:"Reihenfolge", value:"A (Begriff & Formel) → B (Simulation & Messwerte) → C (Rechenbeispiele) → D (Tabellenkalkulation)"},
+      {label:"Format", value:"Jede Gruppe 5 min. Gruppe B zeigt live in der Simulation, Gruppe D zeigt live in der Tabellenkalkulation."},
+      {label:"Lehrer", value:"Verbindet am Ende: \"Warum ist Wasser der wichtigste Wärmeträger in Heizungsanlagen? Weil c so hoch ist — das ist die Kernaussage für die nächsten Stunden.\""}
+    ]
+  },
+  { name:"Gemeinsame Aufgabe & Sicherung", time:"ca. 10 min", color:"#97C459",
+    items:[
+      {label:"Aufgabe", value:"Gemeinsam rechnen: Ein 100-Liter-Pufferspeicher wird von 20°C auf 60°C aufgeheizt.<br>Q = 100 kg · 4200 J/(kg·K) · 40 K = 16.800.000 J ≈ 4,7 kWh"},
+      {label:"Bezug", value:"\"Das ist die Energie, die eine 2-kW-Heizung 2,3 Stunden braucht — und die ein Haushalt an einem kalten Tag fast vollständig verbraucht.\" → Brückenschlag zu DS 5."},
+      {label:"Ausblick", value:"\"In DS 5 schauen wir uns das ganze Haus an — woher kommt die Energie, wohin fließt sie?\""}
+    ]
+  }
+];
+
+const gruppen = [
+  { name:"Gruppe A — Begriff & Formel", color:"#5DCAA5",
+    fragen:[
+      "Was bedeutet „spezifische Wärmekapazität"? Erklärt den Begriff in eigenen Worten.",
+      "Wie lautet die Formel? Was bedeuten die Größen m, c, ΔT und Q jeweils?",
+      "Welche Einheit hat c? Warum steht da „pro kg und pro K"?",
+      "Welchen Wert hat c für Wasser? Für Eisen? Für Aluminium? (Tabelle anlegen)",
+      "Warum hat Wasser so einen ungewöhnlich hohen c-Wert im Vergleich zu Metallen?"
+    ]
+  },
+  { name:"Gruppe B — PhET-Simulation", color:"#85B7EB",
+    fragen:[
+      "Erhitzt alle vier Materialien (Eisen, Ziegel, Wasser, Olivenöl) mit gleicher Leistung. Welches erwärmt sich am schnellsten, welches am langsamsten?",
+      "Notiert für jedes Material: Temperatur nach 30 Sekunden Heizen (Thermometer ablesen).",
+      "Was sagt euch das über die spezifische Wärmekapazität der Materialien?",
+      "Kühlt ein erhitztes Material ab — wie verhält sich die Energieabgabe?",
+      "Erstellt eine Rangliste: Material | beobachtete Erwärmung | vermuteter c-Wert (groß / mittel / klein)"
+    ]
+  },
+  { name:"Gruppe C — Rechnen mit Wasser", color:"#EF9F27",
+    fragen:[
+      "Ein Wasserkocher (1,5 kW) erhitzt 1 Liter Wasser von 20°C auf 100°C. Wie lange dauert das? Wie viel Energie (kWh) wird verbraucht? (c = 4200 J/(kg·K))",
+      "Ein Heizkörper gibt 500 W Wärmestrom ab. Wie viel Wasser (in kg) kann er pro Stunde von 20°C auf 50°C erhitzen?",
+      "Ein Pufferspeicher enthält 200 Liter Wasser bei 70°C. Er gibt Wärme ab bis 30°C. Wie viel Energie (kWh) wurde entnommen?",
+      "Warum wird in Heizungsanlagen fast immer Wasser als Wärmeträger verwendet?",
+      "Was wäre ein Nachteil von Wasser als Wärmeträger?"
+    ]
+  },
+  { name:"Gruppe D — Tabellenkalkulation", color:"#97C459",
+    fragen:[
+      "Baut eine Tabelle in Excel/Calc: Eingabe von m (kg), c (J/kg·K), T_Anfang (°C), T_Ende (°C) → automatische Berechnung von ΔT und Q (in J und kWh).",
+      "Testet die Tabelle: 2 kg Wasser, 20°C → 80°C; 5 kg Eisen (c = 450), 20°C → 300°C.",
+      "Fügt eine Zeile hinzu: Wärmestrom P (W) eingeben → Zeit berechnen, die zum Aufheizen benötigt wird.",
+      "Erstellt ein einfaches Diagramm: Wärmemenge Q in Abhängigkeit von ΔT (für 1 kg Wasser).",
+      "Wie könntet ihr die Tabelle so erweitern, dass man verschiedene Materialien direkt vergleichen kann?"
+    ]
+  }
+];
+
+const pc = document.getElementById('phases');
+phases.forEach((p,i)=>{
+  const b=document.createElement('div');b.className='phase-block';
+  b.innerHTML=`<div class="phase-header" onclick="toggleP(${i})"><div class="phase-dot" style="background:${p.color}"></div><div class="phase-name">${p.name}</div><div class="phase-time">${p.time}</div><div class="phase-chevron" id="pc-${i}">▶</div></div><div class="phase-body" id="pb-${i}"><div class="phase-content">${p.items.map((it,j)=>`${j>0?'<div class="divider"></div>':''}<div class="row"><div class="label">${it.label}</div><div class="value">${it.value}</div></div>`).join('')}${p.note?`<div class="note">${p.note}</div>`:''}</div></div>`;
+  pc.appendChild(b);
+});
+
+const gc=document.getElementById('gruppen');
+gruppen.forEach((g,i)=>{
+  const b=document.createElement('div');b.className='gruppe';
+  b.innerHTML=`<div class="gruppe-header" onclick="toggleG(${i})"><div class="phase-dot" style="background:${g.color}"></div><div class="gruppe-label">${g.name}</div><div class="phase-chevron" id="gc-${i}">▶</div></div><div class="gruppe-body" id="gb-${i}"><ol>${g.fragen.map(f=>`<li>${f}</li>`).join('')}</ol></div>`;
+  gc.appendChild(b);
+});
+
+function toggleP(i){const b=document.getElementById('pb-'+i),c=document.getElementById('pc-'+i),o=b.classList.contains('open');document.querySelectorAll('.phase-body.open').forEach(x=>x.classList.remove('open'));document.querySelectorAll('#phases .phase-chevron').forEach(x=>x.style.transform='');if(!o){b.classList.add('open');c.style.transform='rotate(90deg)';}}
+function toggleG(i){const b=document.getElementById('gb-'+i),c=document.getElementById('gc-'+i),o=b.classList.contains('open');document.querySelectorAll('.gruppe-body.open').forEach(x=>x.classList.remove('open'));document.querySelectorAll('#gruppen .phase-chevron').forEach(x=>x.style.transform='');if(!o){b.classList.add('open');c.style.transform='rotate(90deg)';}}
+
+document.getElementById('pb-0').classList.add('open');
+document.getElementById('pc-0').style.transform='rotate(90deg)';
+</script>
+</body>
+</html>
